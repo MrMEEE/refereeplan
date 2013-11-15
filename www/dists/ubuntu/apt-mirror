@@ -1,0 +1,22 @@
+# apt-mirror configuration file
+
+##
+## The default configuration options (uncomment and change to override)
+##
+#
+
+set base_path INSTALL_PATH/repos/REPONAME
+
+# set mirror_path $base_path/mirror
+# set skel_path $base_path/skel
+# set var_path $base_path/var
+
+#
+# set defaultarch <running host architecture>
+set nthreads 20
+
+REPOSITORIES
+
+#deb-amd64 http://ppa.launchpad.net/xorg-edgers/ppa/ubuntu raring main
+#deb-amd64 http://packages.medibuntu.org/ hardy free non-free
+
