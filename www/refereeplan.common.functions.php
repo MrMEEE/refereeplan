@@ -7,7 +7,8 @@ function showHeader(){
         <head>
         <body bgcolor="silver">
         <link rel="stylesheet" type="text/css" href="css/general.css">
-        <script type="text/javascript" src="js/general.js"></script>';
+        <script type="text/javascript" src="js/general.js"></script>
+        <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>';
 
   global $currentState;
   $currentState = $_POST['nextState'];
@@ -60,8 +61,13 @@ function showNavigationChildren($parent){
   $mysql_select_children = "SELECT * FROM `navigation` WHERE `parent`='".$parent."' ORDER BY `order`,`id`";
   $query = mysql_query($mysql_select_children);
   while ($child = mysql_fetch_array($query)) {
-      echo '<li><a href="#" onclick="javascript:changeState(\''.$child["name"].'\')">'.$child["title"].'</a>
+      if($child["disabled"]){
+      echo '<li><a href="#">'.$child["title"].'</a>
+              <ul>';
+      }else{
+          echo '<li><a href="#" onclick="javascript:changeState(\''.$child["name"].'\')">'.$child["title"].'</a>
             <ul>';
+      }
       showNavigationChildren($child["id"]);
       echo '</ul>
             </li>';
@@ -77,7 +83,7 @@ function showContent($state){
   
   $showstate = "switch(".$state."){";
     
-    foreach (glob("raincloud.state.*.php") as $filename){
+    foreach (glob("refereeplan.state.*.php") as $filename){
     
       $showstate .= str_replace('?>','',str_replace('<?php','',file_get_contents($filename)));
     
@@ -95,7 +101,68 @@ function showContent($state){
   echo '   </td>
          </tr>
        </table>';
+
+  echo '<script>'.$javascript.'</script>';
 }
 
+function getConfiguration(){
+
+  $configs = mysql_query("SELECT `name`,`value` FROM `config`");
+  
+  while($config = mysql_fetch_assoc($configs)){
+  
+    $configarray[$config["name"]] = $config["value"] ;
+    
+  }
+
+  return $configarray;
+  
+}
+
+function printText($text,$type="text"){
+
+  switch($type){
+  
+    case "header1":
+    
+      return "<h1>".$text."</h1>";
+    
+    break;
+
+    case "header2":
+        
+      return "<h2>".$text."</h2>";
+                  
+    break;
+    
+    default:
+
+      return $text;
+        
+    break;
+
+  }
+
+}
+
+function showMessages($info,$warning,$error){
+
+  $messages = "";
+
+  if($info != ""){
+    $messages .= '<font color="green">'.printText($info).'</font><br>';
+  }
+  
+  if($warning != ""){
+    $messages .= '<font color="orange">'.printText($warning).'</font><br>';
+  }
+  
+  if($error != ""){  
+    $messages .= '<font color="red">'.printText($error).'</font><br>';
+  }
+
+  return $messages;
+
+}
 
 ?>
