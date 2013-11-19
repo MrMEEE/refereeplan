@@ -5,6 +5,8 @@ require("refereeplan.common.functions.php");
 
 $config = getConfiguration();
 
+getIncludes();
+
 showHeader();
 
 showNavigation();

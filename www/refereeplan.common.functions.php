@@ -2,6 +2,8 @@
 
 function showHeader(){
 
+  $config = getConfiguration();
+
   echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
         <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
         <head>
@@ -12,19 +14,18 @@ function showHeader(){
 
   global $currentState;
   $currentState = $_POST['nextState'];
-
+  
   echo '<form name="mainForm" method="post">
           <input type="hidden" name="nextState" value="'.$currentState.'">';
   echo '<table class="main" align="center" bgcolor="white" width="60%">
           <tr>
-            <td>
-            </td>
-            <td>
+	    <td></td>
+            <td>'.fetchText($config['clubname'],"header1")
+            .'
             </td>
             <td align="right">
               <img height="70px" src="img/logo.jpg">
             </td>
-            
           </tr>';
 
 }
@@ -119,7 +120,7 @@ function getConfiguration(){
   
 }
 
-function printText($text,$type="text"){
+function fetchText($text,$type="text"){
 
   switch($type){
   
@@ -133,6 +134,12 @@ function printText($text,$type="text"){
         
       return "<h2>".$text."</h2>";
                   
+    break;
+
+    case "header3":
+    
+      return "<h3>".$text."</h3>";
+      
     break;
     
     default:
@@ -150,19 +157,35 @@ function showMessages($info,$warning,$error){
   $messages = "";
 
   if($info != ""){
-    $messages .= '<font color="green">'.printText($info).'</font><br>';
+    $messages .= '<font color="green">'.fetchText($info).'</font><br>';
   }
   
   if($warning != ""){
-    $messages .= '<font color="orange">'.printText($warning).'</font><br>';
+    $messages .= '<font color="orange">'.fetchText($warning).'</font><br>';
   }
   
   if($error != ""){  
-    $messages .= '<font color="red">'.printText($error).'</font><br>';
+    $messages .= '<font color="red">'.fetchText($error).'</font><br>';
   }
 
   return $messages;
 
 }
+
+function getIncludes(){
+
+  $config = getConfiguration();
+  if($config["gamesource"] != ""){
+    require("refereeplan.sources.".$config["gamesource"].".php");
+  }
+
+}
+
+function fixCharacters($text){
+
+  return htmlentities($text,ENT_COMPAT,"UTF-8");
+
+}
+
 
 ?>
