@@ -1,38 +1,33 @@
 <?php 
 case "configuration":
-  
-  $javascript .= 'function addSisterClubs(){
-			document.mainForm.addSisterClub.value = 1;
-		        document.mainForm.submit();
-		  }
-		  
-		  function changeClubs(id){
-			document.mainForm.changeClub.value = id;
-		        document.mainForm.submit();
-		  }';
-  
-  if(isset($_POST["changeClub"])){
-    $clubinfo = explode(":",$_POST["clubselect0"]);
-    $clubids = $clubinfo[0];
-    $clubname = $clubinfo[1];
-    $i = 1;
-    while(isset($_POST["clubselect".$i])){
-       if($_POST["clubselect".$i] != ":"){
-          $clubinfo = explode(":",$_POST["clubselect".$i]);
-          $clubids .= ",".$clubinfo[0];
-       }
-       $i++;
-    }
-    mysql_query("UPDATE `config` SET `value`='".$clubname."' WHERE `name`='clubname'");
-    mysql_query("UPDATE `config` SET `value`='".$clubids."' WHERE `name`='clubids'");
-    
-  }
-  
-  
-  echo fetchText("Configuration","header2");
+
+  $clublist = "<option value=\":\">".fetchText("No Club selected/Remove Sister Club")."</option>";
   list ($clubs,$ids) = getClubs();
   
   $clubids = getClubIDs();
+  for ($k = 0; $k < count($clubs); $k++){
+	$clubnames[$ids[$k]]=$clubs[$k];
+	$clublist.= "<option value=\"".$ids[$k].":".fixCharacters($clubs[$k])."\">".fixCharacters($clubs[$k])."</option>";
+  }
+
+  $javascript .= 'function addSisterClubs(select){
+			var id = Math.floor( Math.random()*99999 );
+			$("#sisterClubs").append(\'<select id="sisterClub-\'+id+\'" name="clubselect[]" onchange="javascript:changeClubs()">'.addslashes($clublist).'</select><br>\');
+			$("#sisterClub-"+id+\' option[value^="\'+select+\':"]\').attr("selected", true);
+		}
+		  
+		  function changeClubs(){
+			document.mainForm.changeClub.value=1;
+			$.post("ajax/refereeplan.ajax.administration.php", $("#mainForm").serialize());
+			document.mainForm.changeClub.value="";
+			$("#message").text("'.fetchText("Settings were updated").'").show().fadeOut(1000);
+		  }
+		  
+		  function changeUpdatesUrl(){
+			document.mainForm.submit();
+		  }';
+  
+  echo fetchText("Configuration","header2");
   
   if($clubids[0] == ""){
       $clublist.= "<option value=\":\" selected>".fetchText("No Club selected.")."</option>";
@@ -47,14 +42,17 @@ case "configuration":
       }
   }
   
+  echo '<div id="message"></div>';
+  
   echo fetchText("Select Club:","header3");
   
-  echo '<select name="clubselect0" onchange="changeClubs(0);">'.
+  echo '<select name="clubselect[]" onchange="changeClubs();">'.
           $clublist
         .'</select>';
   
   echo fetchText("Sister Clubs:","header3");
   
+  echo '<div id="sisterClubs">';
   for ($i = 1; $i <= count($clubids)-1; $i++){
     if($clubids[$i]==""){
       $clublist = "<option value=\":\" selected>".fetchText("No Club selected/Remove Sister Club")."</option>";
@@ -70,27 +68,18 @@ case "configuration":
       }
     }
 
-    echo '<select name="clubselect'.$i.'" onchange="javascript:changeClubs('.$i.')">
+    echo '<select name="clubselect[]" onchange="javascript:changeClubs()">
 	   '.$clublist.' 
 	  </select><br>';
   }
   
-  if($_POST['addSisterClub'] == 1){
-
-    $clublist = "<option value=\":\" selected>".fetchText("No Club selected/Remove Sister Club")."</option>";
-
-    for ($k = 0; $k < count($clubs); $k++){
-      $clublist.= "<option value=\"".$ids[$k].":".fixCharacters($clubs[$k])."\">".fixCharacters($clubs[$k])."</option>";
-    }
-
-    echo '<select name="clubselect'.$i.'" onchange="javascript:changeClubs('.$i.')">
-	  '.$clublist.' 
-	 </select><br>';
-
-  }
+  echo '</div>';
   
-  echo '<br><a href="#" onclick="javascript:addSisterClubs();"><img width="15px" src="img/add.png">'.fetchText("Add Sister Club").'</a><br>';
+  echo '<br><a href="#" onclick="javascript:addSisterClubs(0);"><img width="15px" src="img/add.png">'.fetchText("Add Sister Club").'</a><br>';
   
+  echo fetchText("URL for Updates:","header3");
+  
+  echo '<input type="text" onchange="javascript:changeUpdatesUrl();" name="updatesUrl" value="'.$config['updatesurl'].'">';
   
   echo '<input type="hidden" name="changeClub">
         <input type="hidden" name="addSisterClub">';

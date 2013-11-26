@@ -1,0 +1,29 @@
+.main { 
+border: 1px solid #000000;
+border-collapse: separate;
+border-left: 0;
+border-top: 0;
+border-radius: 10px;
+border-spacing: 2px;
+}
+
+h1 {
+text-align: left;
+font-family: "Comic Sans MS", cursive, sans-serif;
+color: #0082e1;
+text-shadow: 1px 1px #909090;
+}
+
+h2 { 
+text-align: left;
+font-family: "Comic Sans MS", cursive, sans-serif;
+color: #0082e1;
+text-shadow: 1px 1px #909090;
+}
+
+h3 {
+text-align: left;
+font-family: "Comic Sans MS", cursive, sans-serif;
+color: #0082e1;
+text-shadow: 1px 1px #909090;
+}

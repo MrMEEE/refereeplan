@@ -16,3 +16,4 @@ Sister Clubs:¤S&oslash;ster klubber:
 No Club selected/Remove Sister Club¤Ingen klub valgt/Fjern S&oslash;sterklub
 Add Sister Club¤Tilf&oslash;j S&oslash;sterklub
 Remove¤Fjern
+URL for Updates:¤URL til Opdateringer:

@@ -8,6 +8,7 @@ function showHeader(){
         <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
         <head>
         <body bgcolor="silver">
+        <title>'.$config['clubname'].' Dommerbordsplan</title>
         <link rel="stylesheet" type="text/css" href="css/general.css">
         <script type="text/javascript" src="js/general.js"></script>
         <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>';
@@ -15,7 +16,7 @@ function showHeader(){
   global $currentState;
   $currentState = $_POST['nextState'];
   
-  echo '<form name="mainForm" method="post">
+  echo '<form id="mainForm" name="mainForm" method="post">
           <input type="hidden" name="nextState" value="'.$currentState.'">';
   echo '<table class="main" align="center" bgcolor="white" width="60%">
           <tr>
