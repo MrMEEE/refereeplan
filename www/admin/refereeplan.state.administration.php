@@ -1,6 +1,8 @@
 <?php 
 case "configuration":
 
+  $config = getConfiguration();
+
   $clublist = "<option value=\":\">".fetchText("No Club selected/Remove Sister Club")."</option>";
   list ($clubs,$ids) = getClubs();
   
@@ -27,14 +29,11 @@ case "configuration":
 			document.mainForm.changeClub.value=1;
 			$.post("ajax/refereeplan.ajax.administration.php", $("#mainForm").serialize());
 			document.mainForm.changeClub.value="";
-			$("#message").text("'.fetchText("Settings were updated").'").show().fadeOut(1000);
+			$("#message").text("'.fetchText("Settings were updated").'").show().fadeOut(2000);
 			var inputs = document.getElementById("sisterClubs").childNodes;
-			//var inputs = $("#sisterClubs select");
 			for (x=0;x<=inputs.length;x++){
-				    //alert(inputs[x].getAttribute("id"));
 				    var ti=inputs[x].selectedIndex;
 				    var op=inputs[x].options;
-				    //alert(op[ti].value);
 				    if(op[ti].value == ":"){
 					  $("#"+inputs[x].getAttribute("id")).remove();
 				    }
@@ -43,17 +42,66 @@ case "configuration":
 		  }
 		  
 		  function changeUpdatesUrl(){
-			document.mainForm.submit();
+			$.post("ajax/refereeplan.ajax.administration.php", $("#mainForm").serialize());
+			$("#message").text("'.fetchText("Settings were updated").'").show().fadeOut(2000);
 		  }
 		  
 		  function generateClubs(){
 			var clubs=['.$clubslist.'];
-			for (var i=0,len=clubs.length; i<len; i++){
+			for (var i=1,len=clubs.length; i<len; i++){
 				addSisterClubs(clubs[i]);		
 			}
 		  }
+		  
+		  function generateGyms(){
+			$("#gyms").empty();
+			document.mainForm.getGyms.value="get";
+			$.ajax({type: "POST", url: "ajax/refereeplan.ajax.administration.php",dataType: "json",data: $("#mainForm").serialize() ,success: function(data){
+				$.each(data, function(name,gym){
+					if(gym != ""){
+						$("#gyms").append("<a href=\"#\" onclick=\"javascript:removeGym(\'"+gym+"\');\"><img width=\"15px\" src=\"img/remove.png\" title=\"'.fetchText("Click to remove.").'\">"+name+"</a><br>");
+					}
+				});
+			},error: function(xhr, status, err) {
+				alert(status + ": " + err);
+			}           
+       
+			});
+			
+			document.mainForm.getGyms.value="";
+			
+		  }
+		  
+		  function removeGym(gym){
+		  
+			document.mainForm.getGyms.value="remove";
+			document.mainForm.gymName.value=gym;
+			$.post("ajax/refereeplan.ajax.administration.php", $("#mainForm").serialize());
+			document.mainForm.getGyms.value="";
+			generateGyms();
+			$("#message").text("'.fetchText("Settings were updated").'").show().fadeOut(2000);
+		  
+		  }
+		  
+		  function addGym(){
+		  
+			document.mainForm.getGyms.value="add";
+			document.mainForm.gymName.value=$("#gymSelector :selected").text();
+			$.post("ajax/refereeplan.ajax.administration.php", $("#mainForm").serialize());
+			generateGyms();
+			$("#message").text("'.fetchText("Settings were updated").'").show().fadeOut(2000);
+			document.mainForm.getGyms.value="";
+		  
+		  }
+		  
 		  $(document).ready(function() {
 			generateClubs();
+			generateGyms();
+		  });
+		  $("form").bind("keypress", function (e) {
+			if (e.keyCode == 13) {
+				return false;
+			}
 		  });
 		  ';
   
@@ -103,7 +151,23 @@ case "configuration":
   echo '<input type="text" onchange="javascript:changeUpdatesUrl();" name="updatesUrl" value="'.$config['updatesurl'].'">';
   
   echo '<input type="hidden" name="changeClub">
-        <input type="hidden" name="addSisterClub">';
+        <input type="hidden" name="addSisterClub">
+        <input type="hidden" name="getGyms">
+        <input type="hidden" name="gymName">';
+        
+  echo fetchText("Courts:","header3");
+  
+  echo '<div id="gyms"></div><br>';
+  echo '<select id="gymSelector">
+	  <option selected>'.fetchText("Choose Court").'</option>';
+	  
+  $allcourts = getAllCourts();
+  foreach($allcourts as $court){
+     echo '<option value="'.fixCharacters($court).'">'.fixCharacters($court).'</option>';
+  }
+  
+  echo '</select><br>';
+  echo '<input type="button" onclick="javascript:addGym();" value="'.fetchText("Add").'">';
    
 break;
 ?>

@@ -17,3 +17,7 @@ No Club selected/Remove Sister Club¤Ingen klub valgt/Fjern S&oslash;sterklub
 Add Sister Club¤Tilf&oslash;j S&oslash;sterklub
 Remove¤Fjern
 URL for Updates:¤URL til Opdateringer:
+Courts:¤Haller:
+Click to remove.¤Klik for at fjerne.
+Choose Court¤V&aelig;lg Hal
+Add¤Tilf&oslah;j
