@@ -19,7 +19,10 @@ case "configuration":
 	$clublist.= "<option value=\"".$ids[$k].":".fixCharacters($clubs[$k])."\">".fixCharacters($clubs[$k])."</option>";
   }
 
-  $javascript .= 'function addSisterClubs(select){
+  $javascript .= 'function showUpdated(){
+			$("#message").text("'.fetchText("Settings were updated").'").show().fadeOut(2000);
+		}
+		function addSisterClubs(select){
 			var id = Math.floor( Math.random()*99999 );
 			$("#sisterClubs").append(\'<select id="sisterClub-\'+id+\'" name="clubselect[]" onchange="javascript:changeClubs()">'.addslashes($clublist).'</select>\');
 			$("#sisterClub-"+id+\' option[value^="\'+select+\':"]\').attr("selected", true);
@@ -29,7 +32,7 @@ case "configuration":
 			document.mainForm.changeClub.value=1;
 			$.post("ajax/refereeplan.ajax.administration.php", $("#mainForm").serialize());
 			document.mainForm.changeClub.value="";
-			$("#message").text("'.fetchText("Settings were updated").'").show().fadeOut(2000);
+			showUpdated();
 			var inputs = document.getElementById("sisterClubs").childNodes;
 			for (x=0;x<=inputs.length;x++){
 				    var ti=inputs[x].selectedIndex;
@@ -43,7 +46,7 @@ case "configuration":
 		  
 		  function changeUpdatesUrl(){
 			$.post("ajax/refereeplan.ajax.administration.php", $("#mainForm").serialize());
-			$("#message").text("'.fetchText("Settings were updated").'").show().fadeOut(2000);
+			showUpdated();
 		  }
 		  
 		  function generateClubs(){
@@ -79,7 +82,7 @@ case "configuration":
 			$.post("ajax/refereeplan.ajax.administration.php", $("#mainForm").serialize());
 			document.mainForm.getGyms.value="";
 			generateGyms();
-			$("#message").text("'.fetchText("Settings were updated").'").show().fadeOut(2000);
+			showUpdated();
 		  
 		  }
 		  
@@ -89,9 +92,16 @@ case "configuration":
 			document.mainForm.gymName.value=$("#gymSelector :selected").text();
 			$.post("ajax/refereeplan.ajax.administration.php", $("#mainForm").serialize());
 			generateGyms();
-			$("#message").text("'.fetchText("Settings were updated").'").show().fadeOut(2000);
+			showUpdated();
 			document.mainForm.getGyms.value="";
 		  
+		  }
+		  
+		  function changeGameSource(){
+			document.mainForm.changeSource.value=$("#sourceSelector :selected").text();
+			$.post("ajax/refereeplan.ajax.administration.php", $("#mainForm").serialize());
+			document.mainForm.changeSource.value="";
+			showUpdated();
 		  }
 		  
 		  $(document).ready(function() {
@@ -151,6 +161,7 @@ case "configuration":
   echo '<input type="text" onchange="javascript:changeUpdatesUrl();" name="updatesUrl" value="'.$config['updatesurl'].'">';
   
   echo '<input type="hidden" name="changeClub">
+	<input type="hidden" name="changeSource">
         <input type="hidden" name="addSisterClub">
         <input type="hidden" name="getGyms">
         <input type="hidden" name="gymName">';
@@ -167,7 +178,17 @@ case "configuration":
   }
   
   echo '</select><br>';
-  echo '<input type="button" onclick="javascript:addGym();" value="'.fetchText("Add").'">';
-   
+  echo '<input type="button" onclick="javascript:addGym();" value="'.fetchText("Add").'"><br><br>';
+  
+  echo fetchText("Game Source:","header3");
+  
+  echo '<select id="sourceSelector" onchange="javascript:changeGameSource();">';
+  foreach(glob("refereeplan.sources.*.php") as $source){
+     $sourcename = explode(".",$source);
+     echo '<option value="'.$sourcename[2].'">'.$sourcename[2].'</option>'; 
+  }	
+  echo '</select><br><br>';
+  echo getSourceInfo();
+  echo '<br><br>';
 break;
 ?>

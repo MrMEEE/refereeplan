@@ -1,6 +1,12 @@
 <?php
   require("refereeplan.ajax.common.php");
   
+  if($_POST["changeSource"] != ""){
+  
+    mysql_query("UPDATE `config` SET `value`='".$_POST['changeSource']."' WHERE `name`='gamesource'");
+  
+  }
+  
   if(isset($_POST["changeClub"])){
     
     $clubinfo = explode(":",$_POST["clubselect"][0]);

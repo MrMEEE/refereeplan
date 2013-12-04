@@ -64,10 +64,10 @@ function showNavigationChildren($parent){
   $query = mysql_query($mysql_select_children);
   while ($child = mysql_fetch_array($query)) {
       if($child["disabled"]){
-      echo '<li><a href="#">'.$child["title"].'</a>
+      echo '<li><a href="#">'.fetchText($child["title"]).'</a>
               <ul>';
       }else{
-          echo '<li><a href="#" onclick="javascript:changeState(\''.$child["name"].'\')">'.$child["title"].'</a>
+          echo '<li><a href="#" onclick="javascript:changeState(\''.$child["name"].'\')">'.fetchText($child["title"]).'</a>
             <ul>';
       }
       showNavigationChildren($child["id"]);

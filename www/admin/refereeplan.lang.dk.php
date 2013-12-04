@@ -21,3 +21,7 @@ Courts:¤Haller:
 Click to remove.¤Klik for at fjerne.
 Choose Court¤V&aelig;lg Hal
 Add¤Tilf&oslah;j
+Game Source:¤Kilde for kampdata:
+Source plugin for resultater.basket.dk.¤Plugin til resultater.basket.dk.
+Update Games¤Opdater Kampe
+No teams found, please go to Club->Teams from DBBF.¤Ingen hold fundet, tilf&oslash;j venligst hold under Klub->Hold fra DBBF.

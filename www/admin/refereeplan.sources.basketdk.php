@@ -1,5 +1,11 @@
 <?php
 
+function getSourceInfo(){
+
+  return fetchText("Source plugin for resultater.basket.dk.");
+
+}
+
 function getClubIDs(){
   
   $config=getConfiguration();
@@ -235,5 +241,84 @@ function getAllCourts(){
       curl_close($ch);
 
 }
+
+function getTeamNames(){
+
+      $config = getConfiguration();
+      $clubids = getClubIDs();
+      foreach ($clubids as $clubid){
+	    $url = "http://resultater.basket.dk/tms/Turneringer-og-resultater/Forening-Holdoversigt.aspx?ForeningsId=".$clubid;
+
+	    $ch = curl_init();
+	    curl_setopt($ch,CURLOPT_URL,$url);
+	    curl_setopt($ch,CURLOPT_POST,count($fields));
+	    curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);
+	    curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+	    curl_setopt($ch,CURLOPT_HTTPHEADER,Array("Content-Type: application/x-www-form-urlencoded")); 
+	    curl_setopt($ch,CURLOPT_TIMEOUT,5);
+
+	    $result = curl_exec($ch);
+	    $dom = new DOMDocument();
+    
+	    //load the html  
+	    $page = '
+	    <html>
+	    <head>
+	    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+	    <title>Dommer Sync</title>
+	    </head>
+	    <body></body>
+	    </html>
+	    ';
+
+	    $page .= $result;
+	    $html = @$dom->loadHTML($page);
+	    $xpath = new DOMXPath($dom);		
+	    $tags = $xpath->query("//a[contains(@id,'hlTeam')]");
+
+	    foreach($tags as $tag){
+		  if(!in_array(trim($tag->nodeValue),$teams)){
+			$teams[] = trim($tag->nodeValue);
+		  }
+	    }
+      }
+      return $teams;
+}
+
+function getCourts($club){
+
+      $config = getConfiguration();
+
+      $address = "http://resultater.basket.dk/tms/Turneringer-og-resultater/Forening-Information.aspx?ForeningsId=".$club;
+      $content  = file_get_contents($address);
+      $dom = new DOMDocument();
+      $page = '<html>
+	      <head> 
+	      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+	      <title>Dommer Sync</title>
+	      </head>
+	      <body></body>
+	      </html>';
+
+      $page .= $content;
+      $html = $dom->loadHTML($page);
+      $xpath = new DOMXPath($dom);
+
+      $tags = $xpath->query('//div[@id="ctl00_ContentPlaceHolder1_Forening1_pnlStadium"]/table/tr/td/table/tr/td/a[@title="Information for spillestedet"]');
+      foreach ($tags as $tag) {
+	    $courts[] = (trim($tag->nodeValue));
+      }
+
+      $gyms = $config['gyms'];
+      $gyms = explode(",",$gyms);
+
+      foreach ($gyms as $gym){
+	    $courts[] = trim($gym);
+      }
+
+return $courts;
+
+}
+
 
 ?>
