@@ -1,6 +1,12 @@
 <?php
   require("refereeplan.ajax.common.php");
   
+  if($_POST["changeLanguageSource"] != ""){
+  
+    mysql_query("UPDATE `config` SET `value`='".$_POST['changeLanguageSource']."' WHERE `name`='language'");
+  
+  }
+  
   if($_POST["changeSource"] != ""){
   
     mysql_query("UPDATE `config` SET `value`='".$_POST['changeSource']."' WHERE `name`='gamesource'");

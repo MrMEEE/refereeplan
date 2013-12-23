@@ -5,6 +5,8 @@ require("refereeplan.common.functions.php");
 
 $config = getConfiguration();
 
+$language = getLanguage();
+
 getIncludes();
 
 showHeader();

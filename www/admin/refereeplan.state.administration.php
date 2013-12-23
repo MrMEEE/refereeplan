@@ -104,6 +104,13 @@ case "configuration":
 			showUpdated();
 		  }
 		  
+		  function changeLanguage(){
+			document.mainForm.changeLanguageSource.value=$("#languageSelector :selected").text();
+			$.post("ajax/refereeplan.ajax.administration.php", $("#mainForm").serialize());
+			document.mainForm.changeLanguageSource.value="";
+			showUpdated();
+		  }
+		  
 		  $(document).ready(function() {
 			generateClubs();
 			generateGyms();
@@ -162,6 +169,7 @@ case "configuration":
   
   echo '<input type="hidden" name="changeClub">
 	<input type="hidden" name="changeSource">
+	<input type="hidden" name="changeLanguageSource">
         <input type="hidden" name="addSisterClub">
         <input type="hidden" name="getGyms">
         <input type="hidden" name="gymName">';
@@ -185,10 +193,29 @@ case "configuration":
   echo '<select id="sourceSelector" onchange="javascript:changeGameSource();">';
   foreach(glob("refereeplan.sources.*.php") as $source){
      $sourcename = explode(".",$source);
-     echo '<option value="'.$sourcename[2].'">'.$sourcename[2].'</option>'; 
+     if($sourcename[2] == $config['gamesource']){
+	  $selected = "selected";
+     }else{
+	  $selected = "";
+     }
+     echo '<option value="'.$sourcename[2].'" '.$selected.'>'.$sourcename[2].'</option>'; 
   }	
   echo '</select><br><br>';
   echo getSourceInfo();
   echo '<br><br>';
+  
+  echo fetchText("Language:","header3");
+  
+  echo '<select id="languageSelector" onchange="javascript:changeLanguage();">';
+  foreach(glob("refereeplan.lang.*.php") as $lang){
+     $langname = explode(".",$lang);
+     if($langname[2] == $config['language']){
+	  $selected = "selected";
+     }else{
+	  $selected = "";
+     }
+     echo '<option value="'.$langname[2].'" '.$selected.'>'.$langname[2].'</option>'; 
+  }	
+  echo '</select><br><br>';
 break;
 ?>

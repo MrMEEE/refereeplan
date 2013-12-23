@@ -20,8 +20,18 @@ URL for Updates:¤URL til Opdateringer:
 Courts:¤Haller:
 Click to remove.¤Klik for at fjerne.
 Choose Court¤V&aelig;lg Hal
-Add¤Tilf&oslah;j
+Add¤Tilf&oslash;j
 Game Source:¤Kilde for kampdata:
 Source plugin for resultater.basket.dk.¤Plugin til resultater.basket.dk.
 Update Games¤Opdater Kampe
 No teams found, please go to Club->Teams from DBBF.¤Ingen hold fundet, tilf&oslash;j venligst hold under Klub->Hold fra DBBF.
+Syncing team: ¤Synkroniserer hold: 
+Synced all Games.¤Alle kampe blev opdateret
+Syncronize¤Synkroniser
+No changes.¤Ingen ændringer.
+Adding Homegame: ¤Tilføjer Hjemmekamp: 
+Adding Awaygame: ¤Tilføjer Udekamp: 
+Changes to game: ¤Ændring til kamp: 
+Updating Info for Game: ¤Opdatere Info om kamp: 
+Configuration¤Konfiguration
+Language:¤Sprog:

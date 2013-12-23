@@ -11,7 +11,9 @@ function showHeader(){
         <title>'.$config['clubname'].' Dommerbordsplan</title>
         <link rel="stylesheet" type="text/css" href="css/general.css">
         <script type="text/javascript" src="js/general.js"></script>
-        <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>';
+        <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.10.3.js"></script>
+        <link rel="stylesheet" href="css/jquery-ui-1.10.3-ui-lightness.css">';
 
   global $currentState;
   $currentState = $_POST['nextState'];
@@ -121,31 +123,59 @@ function getConfiguration(){
   
 }
 
+function getLanguage(){
+
+  $config = getConfiguration();
+  
+  $language = array();
+
+  $handle = fopen("refereeplan.lang.".$config['language'].".php", "r");
+  if ($handle) {
+      while (($line = fgets($handle)) !== false) {
+	  $thisline = explode("¤",$line);
+	  $language[$thisline[0]] = $thisline[1];
+      }
+  }
+  
+  return $language;
+
+}
+
+function translateText($text){
+
+  if(array_key_exists($text,$GLOBALS['language'])){
+        return str_replace("\n","",$GLOBALS['language'][$text]);
+  }else{
+  	return $text;
+  }
+
+}
+
 function fetchText($text,$type="text"){
 
   switch($type){
   
     case "header1":
     
-      return "<h1>".$text."</h1>";
+      return "<h1>".translateText($text)."</h1>";
     
     break;
 
     case "header2":
         
-      return "<h2>".$text."</h2>";
+      return "<h2>".translateText($text)."</h2>";
                   
     break;
 
     case "header3":
     
-      return "<h3>".$text."</h3>";
+      return "<h3>".translateText($text)."</h3>";
       
     break;
     
     default:
 
-      return $text;
+      return translateText($text);
         
     break;
 

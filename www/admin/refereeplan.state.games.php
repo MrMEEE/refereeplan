@@ -2,29 +2,56 @@
 case "refereeplanupdate":
     $config = getConfiguration();
     echo fetchText("Update Games","header2");
-    $teamnames = getTeamNames();
-    $clubids = getClubIDs();
-    
-    $courts = array();
-    
-    for($i = 0, $size = count($clubids); $i < $size; ++$i){
-	$courts = array_merge(getCourts($clubids[$i]),$courts);
-    }
-    
+        
     mysql_query("UPDATE `config` SET `value`=now() WHERE `name`='lastupdated'");
+        
+    $javascript .= 'function doSync(){
+			document.mainForm.syncAction.value="getTeams";
+			$.ajax({type: "POST", url: "ajax/refereeplan.ajax.games.php",async:false,dataType: "json",data: $("#mainForm").serialize() ,success: function(data){
+				for (var i = 0, len = data.length; i < len; i++) {
+				      
+				      $("#status").fadeOut( 400 );
+				      $("#status").empty();
+				      progress = 100/data.length*i;
+				      $( "#progressbar" ).progressbar({
+						value: progress
+				      });
+				      $("#status").append("'.fetchText("Syncing team: ").'"+data[i].name).fadeIn( 400 );
+				      document.mainForm.syncTeamId.value=data[i].id;
+				      document.mainForm.syncTeamUrl.value=data[i].address;
+				      document.mainForm.syncAction.value="syncTeam";
+				      $.ajax({type: "POST", url: "ajax/refereeplan.ajax.games.php",async:false,dataType: "json",data:$("#mainForm").serialize() ,success: function(syncdata){
+					    $("#log").append(data[i].name+":<br>");
+					    for (var j = 0, len = syncdata.length; j < len; j++) {
+						  $("#log").append(syncdata[j].text+"<br>").fadeIn( 400 );
+					    }
+				      }});
+				      $("#status").empty();
+				      $("#status").append("'.fetchText("Synced all Games.").'");
+				}
+				$( "#progressbar" ).progressbar({
+						value: 100
+				});
+				
+			},error: function(xhr, status, err) {
+				alert(status + ": " + err);
+			}           
+       
+			});
+			
+			document.mainForm.syncAction.value="";
+			
+		    }';
     
-    $calendars = mysql_query("SELECT * FROM `calendars`");
+    echo '<input type="submit" id="syncNow" value="'.fetchText("Syncronize").'" onclick="javascript:doSync(); this.disabled=true; return false;"><br><br>
+	  <input type="hidden" name="syncAction">
+	  <input type="hidden" name="syncTeamId">
+	  <input type="hidden" name="syncTeamUrl">';
     
-    if (mysql_num_rows($calendars) == 0) {
-	echo fetchText("No team calendars found, please go to Club->Teams from DBBF.");
-	exit;
-    }
-    if(!mysql_num_rows(mysql_query("SELECT * FROM teams WHERE name = 'DBBF'"))){
-	mysql_query("INSERT INTO teams SET name='DBBF'");
-    }
+    echo '<div id="status"></div><br>';
+    echo '<div id="progressbar"></div><br>';
+    echo '<div id="log"></div><br>';
     
-    $dbbfentry=mysql_fetch_assoc(mysql_query("SELECT * FROM teams WHERE name = 'DBBF'"));
-    $dbbfid=$dbbfentry['id'];
     
 break;
 ?>
