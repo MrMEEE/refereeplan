@@ -3,7 +3,7 @@ case "clubteamsdbbf":
   
   $config = getConfiguration();
   $javascript .= 'function removeTeam(teamid){
-		      answer = confirm("'.fetchText("Are you sure that you want to remove this team/league??").'");
+		      answer = confirm("'.fetchText("Are you sure that you want to remove this team/league??","javascript").'");
 		      if (answer !=0){
 		          document.mainForm.removeTeam.value = teamid;
 		          document.mainForm.submit();
@@ -11,7 +11,7 @@ case "clubteamsdbbf":
                   }
 
 	function removeAllTeams(){
-                answer = confirm("'.fetchText("Are you sure that you want to remove all teams/leagues??").'");
+                answer = confirm("'.fetchText("Are you sure that you want to remove all teams/leagues??","javascript").'");
                 if (answer !=0){
                         document.mainForm.removeAllTeams.value = true;
                         document.mainForm.submit();

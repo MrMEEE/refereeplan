@@ -1,15 +1,15 @@
 Teams from DBBF¤Hold fra DBBF
-Are you sure that you want to remove this team/league??¤Er du sikker p&aoring; at du vil slette dette Hold/denne Pulje??
-Are you sure that you want to remove all teams/leagues??¤Er du sikker p&aoring; at du vil slette alle Hold/Puljer??
+Are you sure that you want to remove this team/league??¤Er du sikker p&aring; at du vil slette dette Hold/denne Pulje??
+Are you sure that you want to remove all teams/leagues??¤Er du sikker p&aring; at du vil slette alle Hold/Puljer??
 Add all of the Clubs Teams and Leagues¤Tilf&oslash;j alle klubbens hold/puljer
 Remove all of the Clubs Teams and Leagues¤Fjern alle klubbens hold/puljer
 All of the Teams and Leagues has been removed.¤Alle klubbens hold/puljer er blevet slettet.
 Remove all of the Clubs Teams and Leagues¤Fjern alle klubbens hold/puljer
 No new Teams or Leagues.¤Ingen nye Hold/Puljer.
-Added: ¤Tilf&oslah;jet: 
+Added: ¤Tilf&oslash;jet: 
 Teams:¤Hold:
 Team/League was removed.¤Hold/Pulje blev fjernet.
- new Team(s)/League(s) was added.¤ nye hold/puljer blev tilf&oslah;jet.
+ new Team(s)/League(s) was added.¤ nye hold/puljer blev tilf&oslash;jet.
 Select Club:¤V&aelig;lg Klub:
 No Club selected.¤Ingen klub valgt.
 Sister Clubs:¤S&oslash;ster klubber:
@@ -35,3 +35,14 @@ Changes to game: ¤Ændring til kamp:
 Updating Info for Game: ¤Opdatere Info om kamp: 
 Configuration¤Konfiguration
 Language:¤Sprog:
+Club¤Klub
+Monday¤Mandag
+Tuesday¤Tirsdag
+Wednesday¤Onsdag
+Thursday¤Torsdag
+Friday¤Fridag
+Saturday¤L&oslash;rdag
+Sundag¤S&oslash;ndag
+Refereeplan¤Dommerplan
+Update Game Schedule¤Opdater Kamp Program
+Upcomming Games¤Kommende Kampe

@@ -555,9 +555,11 @@ function syncTeam($teamid,$teamurl){
 			}else{
 			    $time .= substr($fulldate,16,2);
 			}
-			$text = trim($hometeam)." : ".$currentteam.", ".$pulje[1];
+			$text = trim($hometeam)." : ".$pulje[0].", ".$pulje[1];
 			$text .= " vs. ";
 			$text .= trim($awayteam);
+			
+			$returns[] = $text;
 
 			if(mysql_num_rows(mysql_query("SELECT id FROM games WHERE id = '$id'"))) {
 				mysql_query("UPDATE `games` set place='$place' WHERE id='$id'");

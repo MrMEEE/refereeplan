@@ -1,0 +1,206 @@
+ul.gameList{
+	margin:0 auto;
+	width:900px;
+	position:relative;
+}
+
+ul.gameList li{
+	border:1px solid #EEEEEE;
+	list-style:none;
+	height:260px;
+	margin:4px;
+	padding:5px;
+	position:relative;
+	width:93%;
+
+	/* CSS3 text shadow and rounded corners: */
+	
+	text-shadow:1px 1px 0 white;
+	
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+}
+
+ul.gameList li.new{
+	background-color:#FFD633;
+}
+
+ul.gameList li.changed{
+	background-color:#FF9980;
+
+}
+ul.gameList li.ok{
+	background-color:#80FF99;
+}
+ul.gameList li.cancelled{
+        background-color:#1B9DE3;
+}
+
+ul.gameList li.moved{
+        background-color:#ff6501;
+}
+
+ul.gameList li:hover{
+	border-color:#9be0f9;
+	
+	/* CSS3 glow effect: */
+	-moz-box-shadow:0 0 5px #A6E5FD;
+	-webkit-box-shadow:0 0 5px #A6E5FD;
+	box-shadow:0 0 5px #A6E5FD;
+}
+
+.game .text{
+	color:#373333;
+	font-size:1em;
+}
+
+.game .date{
+        color:#373333;
+        font-size:1em;
+}
+
+.game .day{
+        color:#373333;
+        font-size:1em;
+}
+
+.game .time{
+        color:#373333;
+        font-size:1em;
+}
+
+.game .number{
+        color:#373333;
+        font-size:1em;
+}
+
+.game .place{
+        color:#373333;
+        font-size:1em;
+}
+
+
+/* The edit and delete buttons */
+	
+.game .actions{
+	position:absolute;
+	right:7px;
+	top:6px;
+}
+
+.game .actions a{
+	display:block;
+	width:16px;
+	height:16px;
+	overflow:hidden;
+	float:left;
+	text-indent:-9999px;
+	margin:3px;
+}
+
+.game .actions a.edit{
+	background:url("../img/edit.png") no-repeat center center;
+}
+
+.game .actions a.delete{
+	background:url("../img/delete.png") no-repeat center center;
+}
+
+.game .actions a.editdate{
+}
+
+
+.game .actions .refereeteam1{
+	color:#001188;
+	font-size:1.4em;
+}
+
+.game .actions .refereeteam2{
+        color:#001188;
+        font-size:1.4em;
+}
+
+.game .actions .tableteam1{
+        color:#001188;
+        font-size:1.4em;
+}
+
+.game .actions .tableteam2{
+        color:#001188;  
+        font-size:1.4em;
+}
+
+.game .actions .tableteam3{
+        color:#001188;  
+        font-size:1.4em;
+}
+
+
+/* The edit textbox */
+
+.game input{
+	border:1px solid #CCCCCC;
+	color:#666666;
+	font-family:Arial,Helvetica,sans-serif;
+	font-size:0.725em;
+	padding:3px 4px;
+	width:300px;
+}
+
+/* The Save and Cancel edit links: */
+
+.editGame{
+	display:inline;
+	font-size:0.6em;
+	padding-left:9px;
+}
+
+.editGame a{
+	font-weight:bold;
+}
+
+a.discardChanges{
+	color:#C00 !important;
+}
+
+a.saveChanges{
+	color:#4DB209 !important;
+}
+
+a.discardChangesDate{
+        color:#C00 !important;
+}
+
+a.saveChangesDate{
+        color:#4DB209 !important;
+}
+
+a.discardChangesTime{
+        color:#C00 !important;
+}
+
+a.saveChangesTime{
+        color:#4DB209 !important;
+}
+a.discardChangesNumber{
+        color:#C00 !important;
+}
+
+a.saveChangesNumber{
+        color:#4DB209 !important;
+}
+
+a.discardChangesPlace{
+        color:#C00 !important;
+}
+
+a.saveChangesPlace{
+        color:#4DB209 !important;
+}
+
+/* Overwriting some of the default jQuery UI styles */
+
+.ui-button,.ui-dialog-titlebar{
+	font-size:0.72em !important;
+}

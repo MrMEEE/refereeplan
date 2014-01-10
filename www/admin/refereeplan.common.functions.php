@@ -11,9 +11,10 @@ function showHeader(){
         <title>'.$config['clubname'].' Dommerbordsplan</title>
         <link rel="stylesheet" type="text/css" href="css/general.css">
         <script type="text/javascript" src="js/general.js"></script>
-        <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.10.3.js"></script>
-        <link rel="stylesheet" href="css/jquery-ui-1.10.3-ui-lightness.css">';
+        <link rel="stylesheet" href="css/jquery-ui-1.10.3-ui-lightness.css">
+        <meta charset="utf-8">';
 
   global $currentState;
   $currentState = $_POST['nextState'];
@@ -173,6 +174,12 @@ function fetchText($text,$type="text"){
       
     break;
     
+    case "javascript":
+    
+      return stringToJava(translateText($text));
+    
+    break;
+    
     default:
 
       return translateText($text);
@@ -218,5 +225,23 @@ function fixCharacters($text){
 
 }
 
+function stringToJava($text){
+
+  $array = array(
+    "&aring;" => "å",
+    "&oslash;" => "ø",
+    "&aelig" => "æ",
+    "&Aring;" => "Å",
+    "&Oslash;" => "Ø",
+    "&AElig" => "Æ"
+  );
+  
+  foreach ($array as $key => $value) {
+      $text = str_replace($key,$value,$text);
+  }
+  
+  return $text;
+
+}
 
 ?>

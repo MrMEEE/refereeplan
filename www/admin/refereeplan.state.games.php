@@ -54,4 +54,40 @@ case "refereeplanupdate":
     
     
 break;
+
+case "refereeplanupcomminggames":
+    
+    echo '<script type="text/javascript" src="js/games.js"></script>';
+    echo '<link rel="stylesheet" type="text/css" href="css/games.css">';
+    
+    require("class/refereeplan.class.games.php");
+    
+    $query = mysql_query("SELECT * FROM `games` WHERE CURDATE() <= `date` AND `homegame`= 1 ORDER BY `date`,`time` ASC ");
+    $query2 = mysql_query("SELECT * FROM `games` WHERE `date` = '0000-00-00' AND `homegame`= 1 ORDER BY `date`,`time` ASC ");
+
+    $games = array();
+    
+    if(mysql_num_rows($query2)){
+	while($row = mysql_fetch_assoc($query2)){
+	    $games[] = new gameObj($row);
+	}
+    }
+
+    if(mysql_num_rows($query)){
+	while($row = mysql_fetch_assoc($query)){
+	    $games[] = new gameObj($row);
+	}
+    }
+    
+    echo '<ul class="gameList">';
+		
+        foreach($games as $game){
+	      echo $game;
+	}
+	
+
+    echo '</ul>';
+    
+break;
+
 ?>
