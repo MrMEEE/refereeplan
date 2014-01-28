@@ -129,8 +129,11 @@ function getLanguage(){
   $config = getConfiguration();
   
   $language = array();
-
-  $handle = fopen("refereeplan.lang.".$config['language'].".php", "r");
+  if (file_exists("refereeplan.lang.".$config['language'].".php")){
+      $handle = fopen("refereeplan.lang.".$config['language'].".php", "r");
+  }else{
+      $handle = fopen("../refereeplan.lang.".$config['language'].".php", "r");
+  }
   if ($handle) {
       while (($line = fgets($handle)) !== false) {
 	  $thisline = explode("¤",$line);
@@ -175,6 +178,8 @@ function fetchText($text,$type="text"){
     break;
     
     case "javascript":
+      
+      $GLOBALS['language'] = getLanguage();
     
       return stringToJava(translateText($text));
     

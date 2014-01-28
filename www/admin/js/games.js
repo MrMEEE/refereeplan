@@ -6,6 +6,7 @@ $(document).ready(function(){
 	$("#dialog-confirm").dialog({
 		resizable: false,
 		height:130,
+		width:400,
 		modal: true,
 		autoOpen:false,
 		buttons: {
@@ -42,11 +43,10 @@ $(document).ready(function(){
                 }
 
                 $('<input type="text">').val(container.text()).appendTo(container.empty());
-
                 // Appending the save and cancel links:
                 container.append(
-                        '<div class="editGame">'+
-                                '<a class="saveChanges" href="#">Save</a> or <a class="discardChanges" href="#">Cancel</a>'+
+			'<div class="editGame">'+
+                                '<a class="saveChanges" href="#">'+fetchText("Save")+'</a> '+fetchText("or")+' <a class="discardChanges" href="#">'+fetchText("Cancel")+'</a>'+
                         '</div>'
                 );
 	});
@@ -73,7 +73,7 @@ $(document).ready(function(){
                 // Appending the save and cancel links:
                 container.append(
                         '<div class="editGame">'+
-                                '<a class="saveChangesDate" href="#">Save</a> or <a class="discardChangesDate" href="#">Cancel</a>'+
+                                '<a class="saveChangesDate" href="#">'+fetchText("Save")+'</a> '+fetchText("or")+' <a class="discardChangesDate" href="#">'+fetchText("Cancel")+'</a>'+
                         '</div>'
                 );
         });
@@ -98,11 +98,7 @@ $(document).ready(function(){
                 $('<input type="time">').val(container.text()).appendTo(container.empty());
 
                 // Appending the save and cancel links:
-                container.append(
-                        '<div class="editGame">'+
-                                '<a class="saveChangesTime" href="#">Save</a> or <a class="discardChangesTime" href="#">Cancel</a>'+
-                        '</div>'
-                );
+                container.append('<div class="editGame">'+'<a class="saveChangesTime" href="#">'+fetchText("Save")+'</a> '+fetchText("or")+' <a class="discardChangesTime" href="#">'+fetchText("Cancel")+'</a>'+'</div>');
         });
 	
 	$('.game .place').on('dblclick',null,function(){   
@@ -127,7 +123,7 @@ $(document).ready(function(){
                 // Appending the save and cancel links:
                 container.append(
                         '<div class="editGame">'+
-                                '<a class="saveChangesPlace" href="#">Save</a> or <a class="discardChangesPlace" href="#">Cancel</a>'+
+                                '<a class="saveChangesPlace" href="#">'+fetchText("Save")+'</a> '+fetchText("or")+' <a class="discardChangesPlace" href="#">'+fetchText("Cancel")+'</a>'+
                         '</div>'
                 );
         });
@@ -156,7 +152,9 @@ $(document).ready(function(){
 		
 	// Listening for a click on a delete button:
 
-	$('.game').on('click','a.delete',function(){
+	//$('.game').on('click','a.delete',function(){
+	$('.game .delete').on('click',null,function(event){
+		event.preventDefault();
 		$("#dialog-confirm").dialog('open');
 	});
 	
@@ -308,5 +306,17 @@ $(document).ready(function(){
 		
 		e.preventDefault();
 	});
+
+	$("li[id^=game-]").mouseenter(function(e){
+		var gameid = $(this).attr('id').replace("game-","");
+		
+		$("#dutiesinfo-"+gameid).show();
+	});
 	
-}); // Closing $(document).ready()
+	$("li[id^=game-]").mouseleave(function(e){
+		var gameid = $(this).attr('id').replace("game-","");
+		
+		$("#dutiesinfo-"+gameid).hide();
+	});
+	
+}); 

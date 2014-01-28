@@ -46,3 +46,22 @@ Sundag¤S&oslash;ndag
 Refereeplan¤Dommerplan
 Update Game Schedule¤Opdater Kamp Program
 Upcomming Games¤Kommende Kampe
+Game number:¤Kampnummer:
+Date:¤Dato:
+Time:¤Tidspunkt:
+Description:¤Beskrivelse:
+Place:¤Sted:
+Referee Table:¤Dommerbord:
+Choose a Team¤V&aelig;lg et hold
+Referee #1:¤1. Dommer:
+Referee #2:¤2. Dommer:
+Shot Clock:¤24. Sekunders:
+Refereeduty has been confirmed¤Dommertjansen er bekr&aelig;ftet
+Refereeduty has NOT been confirmed¤Dommertjansen er IKKE bekr&aelig;ftet
+Delete¤Slet
+Save¤Gem
+or¤eller
+Cancel¤Annuller
+Are you sure you want to delete this game??¤Er du sikker på at du vil slette denne kamp??
+Delete Game??¤Slet Kamp??
+Teams/Persons¤Hold/Personer

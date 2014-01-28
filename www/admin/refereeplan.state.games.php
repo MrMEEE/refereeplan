@@ -26,12 +26,13 @@ case "refereeplanupdate":
 						  $("#log").append(syncdata[j].text+"<br>").fadeIn( 400 );
 					    }
 				      }});
-				      $("#status").empty();
-				      $("#status").append("'.fetchText("Synced all Games.").'");
+				      
 				}
 				$( "#progressbar" ).progressbar({
 						value: 100
 				});
+				$("#status").empty();
+				$("#status").append("'.fetchText("Synced all Games.").'");
 				
 			},error: function(xhr, status, err) {
 				alert(status + ": " + err);
@@ -59,6 +60,7 @@ case "refereeplanupcomminggames":
     
     echo '<script type="text/javascript" src="js/games.js"></script>';
     echo '<link rel="stylesheet" type="text/css" href="css/games.css">';
+    echo '<div id="dialog-confirm" title="'.fetchText("Delete Game??").'">'.fetchText("Are you sure you want to delete this game??").'</div>';
     
     require("class/refereeplan.class.games.php");
     
