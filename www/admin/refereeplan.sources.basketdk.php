@@ -454,7 +454,7 @@ function syncTeam($teamid,$teamurl){
 	}
 	
 	if ( $tables->length < 1){
-	      $returns[] = "Unavailable League/Team";
+	      $returns[] = fetchText("Unavailable League/Team");
 	}else{
 	foreach ($rows as $row){   
 		$cols = $row->getElementsByTagName('td');   
@@ -559,7 +559,7 @@ function syncTeam($teamid,$teamurl){
 			$text .= " vs. ";
 			$text .= trim($awayteam);
 			
-			$returns[] = $text;
+			//$returns[] = $text;
 
 			if(mysql_num_rows(mysql_query("SELECT id FROM games WHERE id = '$id'"))) {
 				mysql_query("UPDATE `games` set place='$place' WHERE id='$id'");

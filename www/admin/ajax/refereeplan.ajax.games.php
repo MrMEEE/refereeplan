@@ -1,6 +1,6 @@
 <?php
-require("refereeplan.ajax.common.php");
-require("../class/refereeplan.class.games.php");
+require_once("refereeplan.ajax.common.php");
+require_once("../class/refereeplan.class.games.php");
 
 switch($_POST['syncAction']){
 

@@ -64,4 +64,6 @@ or¤eller
 Cancel¤Annuller
 Are you sure you want to delete this game??¤Er du sikker på at du vil slette denne kamp??
 Delete Game??¤Slet Kamp??
-Teams/Persons¤Hold/Personer
+Teams¤Hold
+Referees¤Dommere
+Unavailable League/Team¤Ugyldig r&aelig;kke/hold

@@ -157,6 +157,10 @@ function translateText($text){
 
 function fetchText($text,$type="text"){
 
+  if(!isset($GLOBALS['language'])){
+    $GLOBALS['language'] = getLanguage();
+  }
+
   switch($type){
   
     case "header1":
@@ -178,8 +182,6 @@ function fetchText($text,$type="text"){
     break;
     
     case "javascript":
-      
-      $GLOBALS['language'] = getLanguage();
     
       return stringToJava(translateText($text));
     
@@ -219,7 +221,7 @@ function getIncludes(){
 
   $config = getConfiguration();
   if($config["gamesource"] != ""){
-    require("refereeplan.sources.".$config["gamesource"].".php");
+    require_once("refereeplan.sources.".$config["gamesource"].".php");
   }
 
 }

@@ -1,39 +1,19 @@
 <?php 
 case "clubteamsdbbf":
-  
-  $config = getConfiguration();
-  $javascript .= 'function removeTeam(teamid){
-		      answer = confirm("'.fetchText("Are you sure that you want to remove this team/league??","javascript").'");
-		      if (answer !=0){
-		          document.mainForm.removeTeam.value = teamid;
-		          document.mainForm.submit();
-                      }
-                  }
 
-	function removeAllTeams(){
-                answer = confirm("'.fetchText("Are you sure that you want to remove all teams/leagues??","javascript").'");
-                if (answer !=0){
-                        document.mainForm.removeAllTeams.value = true;
-                        document.mainForm.submit();
-                }
-        }
-
-        function addAllTeams(){
-                document.mainForm.addAllTeams.value = true;
-                document.mainForm.submit();
-        }';
+  echo '<script type="text/javascript" src="js/club.js"></script>';
   
   if($_POST["removeTeam"]){
   
     mysql_query("DELETE FROM `calendars` WHERE `id`='".$_POST["removeTeam"]."'");
-    $warning = "Team/League was removed.";
+    $warning = fetchText("Team/League was removed.");
   
   }
   
   if($_POST["removeAllTeams"]){
     
     mysql_query("DELETE FROM `calendars`");
-    $warning = "All of the Teams and Leagues has been removed.";
+    $warning = fetchText("All of the Teams and Leagues has been removed.");
     
   }
   
@@ -79,7 +59,12 @@ case "clubteamsdbbf":
         <input type="hidden" name="addAllTeams">';
 
 break;
+
 case "clubteams":
-  echo fetchText("Teams/Persons","header1");
+  echo fetchText("Teams","header1");
+break;
+
+case "clubrefs":
+  echo fetchText("Referees","header1");
 break;
 ?>

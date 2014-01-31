@@ -117,8 +117,8 @@ $(document).ready(function(){
                         // This will block the edit button if the edit box is already open:
                         return false;
                 }
-
-                $('<input type="place">').val(container.text()).appendTo(container.empty());
+		var text = container.text().replace(/\n/g, ' ');
+                $('<input type="place">').val(text).appendTo(container.empty());
 
                 // Appending the save and cancel links:
                 container.append(
@@ -320,3 +320,56 @@ $(document).ready(function(){
 	});
 	
 }); 
+
+function doSync(){
+			$("#log").empty();
+			document.mainForm.syncAction.value="getTeams";
+			$.ajax({type: "POST", url: "ajax/refereeplan.ajax.games.php",async:true,dataType: "json",data: $("#mainForm").serialize() ,success: function(data){
+				syncTeams(data,data.length,1);
+				
+			},error: function(xhr, status, err) {
+				alert(status + ": " + err);
+			}           
+       
+			});
+				
+}
+
+function syncTeams(data,length,count){
+  
+	if (data.length > 0) {
+		var syncItem = data.shift();
+		
+		$("#status").fadeOut( 400 );
+		$("#status").empty();
+		progress = 100/length*count;
+		$( "#progressbar" ).progressbar({
+			value: progress
+		});
+		
+		count++;
+		$("#status").append(fetchText("Syncing team: ")+syncItem.name).fadeIn( 400 );
+		document.mainForm.syncTeamId.value=syncItem.id;
+		document.mainForm.syncTeamUrl.value=syncItem.address;
+		document.mainForm.syncAction.value="syncTeam";
+		
+		$.ajax({type: "POST", url: "ajax/refereeplan.ajax.games.php",async:true,dataType: "json",data:$("#mainForm").serialize() ,success: function(syncdata){
+			for (var j = 0, len = syncdata.length; j < len; j++) {
+				$("#log").prepend(syncdata[j].text+"<br>").fadeIn( 400 );
+			}
+			$("#log").prepend(syncItem.name+":<br>");
+			syncTeams(data,length,count);
+		}});
+	}else{
+	  
+		$( "#progressbar" ).progressbar({
+			value: 100
+		});
+		$("#status").empty();
+		$("#status").append(fetchText("Synced all Games."));
+		document.mainForm.syncAction.value="";
+		$("#syncNow").prop('disabled', false);
+	}
+	
+  
+}
