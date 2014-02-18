@@ -152,10 +152,20 @@ $(document).ready(function(){
 		
 	// Listening for a click on a delete button:
 
-	//$('.game').on('click','a.delete',function(){
 	$('.game .delete').on('click',null,function(event){
 		event.preventDefault();
 		$("#dialog-confirm").dialog('open');
+	});
+	
+	$('.game .acknowledge').on('click',null,function(event){
+		event.preventDefault();
+		var id = $(this).closest('.game').attr('id').replace("game-","");
+		$.post("ajax/refereeplan.ajax.games.php",{async:false,'action':'acknowledgemove','id':id}, function(){
+		  setClass(id);
+		  });
+		$(this).closest('.game .acknowledge').text("");
+		
+		
 	});
 	
 	$('.game').on('click','a.edit',function(){
@@ -268,25 +278,26 @@ $(document).ready(function(){
         });
 
 	
-	$('.game form.refereeteam1').change(function(){
+	$('.game #referee1Select').change(function(){
 		var team = currentGame.find("#referee1Select").val();
-		$.post("ajax/refereeplan.ajax.games.php",{'action':'editreferee1team','id':currentGame.data('id'),'team':team});
+		$.post("ajax/refereeplan.ajax.games.php",{async:false,'action':'editreferee1team','id':currentGame.data('id'),'team':team}, function(){setClass(currentGame.data('id'));});
+		
 	});
-        $('.game form.refereeteam2').change(function(){
+        $('.game #referee2Select').change(function(){
                 var team = currentGame.find("#referee2Select").val();
-                $.post("ajax/refereeplan.ajax.games.php",{'action':'editreferee2team','id':currentGame.data('id'),'team':team});
+                $.post("ajax/refereeplan.ajax.games.php",{async:false,'action':'editreferee2team','id':currentGame.data('id'),'team':team}, function(){setClass(currentGame.data('id'));});
         });
-        $('.game form.tableteam1').change(function(){
+        $('.game #table1Select').change(function(){
                 var team = currentGame.find("#table1Select").val();
-                $.post("ajax/refereeplan.ajax.games.php",{'action':'edittable1team','id':currentGame.data('id'),'team':team});
+                $.post("ajax/refereeplan.ajax.games.php",{async:false,'action':'edittable1team','id':currentGame.data('id'),'team':team}, function(){setClass(currentGame.data('id'));});
         });
-        $('.game form.tableteam2').change(function(){
+        $('.game #table2Select').change(function(){
                 var team = currentGame.find("#table2Select").val();
-                $.post("ajax/refereeplan.ajax.games.php",{'action':'edittable2team','id':currentGame.data('id'),'team':team});
+                $.post("ajax/refereeplan.ajax.games.php",{async:false,'action':'edittable2team','id':currentGame.data('id'),'team':team}, function(){setClass(currentGame.data('id'));});
         });
-        $('.game form.tableteam3').change(function(){
+        $('.game #table3Select').change(function(){
                 var team = currentGame.find("#table3Select").val();            
-                $.post("ajax/refereeplan.ajax.games.php",{'action':'edittable3team','id':currentGame.data('id'),'team':team});
+                $.post("ajax/refereeplan.ajax.games.php",{async:false,'action':'edittable3team','id':currentGame.data('id'),'team':team}, function(){setClass(currentGame.data('id'));});
         });
 
 	
@@ -371,5 +382,17 @@ function syncTeams(data,length,count){
 		$("#syncNow").prop('disabled', false);
 	}
 	
+  
+}
+
+function setClass(id){
+  
+  		$.ajax({type: "POST", url: "ajax/refereeplan.ajax.games.php",async:true,dataType: "json",data: {'action':'getclass','id':id} ,success: function(data){
+			$("#game-"+id).removeClass();
+			$("#game-"+id).addClass(data[0].class);
+		},error: function(xhr, status, err) {
+		  alert(status + ": " + err);
+		}           
+      		});
   
 }

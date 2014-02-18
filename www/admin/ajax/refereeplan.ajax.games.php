@@ -83,6 +83,48 @@ switch($_POST['action']){
 	case 'new':
 		gameObj::createNew($_POST['text']);
 	break;
+	
+	case 'getclass':
+		
+		$game = mysql_fetch_assoc(mysql_query("SELECT * FROM `games` WHERE `id`='".$_POST['id']."'"));
+		
+		switch($game['status']){
+		
+		case 0:  // OK
+		    $class = "game ok";
+		    break;
+		case 1:  // New
+		    $class = "game new";
+		      break;
+		case 2:  // Changed
+		    $class = "game changed";
+		    break;
+		case 3:
+		    $class = "game cancelled";
+		    break;
+		case 4:
+		    $class = "game moved";
+		    break;
+		}
+		
+		$json = '[ { "class": "'.$class.'" } ]';
+	
+		echo $json;
+	
+	break;
+	
+	case 'acknowledgemove':
+		$game = mysql_fetch_assoc(mysql_query("SELECT * FROM `games` WHERE `id`='".$_POST['id']."'"));
+		
+		if($game['status'] == 2){
+		    mysql_query("UPDATE games SET status='1' WHERE id=".$game['id']);
+		    $status='1';
+		    if($game['refereeteam1id']!='0' && $game['refereeteam2id']!='0' && $game['tableteam1id']!='0' && $game['tableteam2id']!='0' && $game['tableteam3id']!='0'){
+			  mysql_query("UPDATE games SET status='0' WHERE id = '".$game['id']."'");
+		    }
+		}
+	break;
+	
 }
 
 ?>

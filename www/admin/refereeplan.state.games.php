@@ -23,16 +23,17 @@ break;
 
 case "refereeplanupcomminggames":
     
-    echo '<script type="text/javascript" src="js/games.js"></script>';
-    echo '<link rel="stylesheet" type="text/css" href="css/games.css">';
-    echo '<div id="dialog-confirm" title="'.fetchText("Delete Game??").'">'.fetchText("Are you sure you want to delete this game??").'</div>';
-    
     require("class/refereeplan.class.games.php");
+    require("refereeplan.common.games.functions.php");
+    
+    echo showGamesCommon();
     
     $query = mysql_query("SELECT * FROM `games` WHERE CURDATE() <= `date` AND `homegame`= 1 ORDER BY `date`,`time` ASC ");
     $query2 = mysql_query("SELECT * FROM `games` WHERE `date` = '0000-00-00' AND `homegame`= 1 ORDER BY `date`,`time` ASC ");
 
     $games = array();
+    
+    echo showGamesLegend();
     
     if(mysql_num_rows($query2)){
 	while($row = mysql_fetch_assoc($query2)){

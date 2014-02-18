@@ -61,10 +61,28 @@ case "clubteamsdbbf":
 break;
 
 case "clubteams":
-  echo fetchText("Teams","header1");
+  echo fetchText("Teams","header2");
+
+  $query = mysql_query("SELECT * FROM `teams` ORDER BY `name` ASC");
+
+  while($row = mysql_fetch_assoc($query)){
+    if($row['name']!="-"){
+	echo $row['name'];
+	    echo ' - <a href="javascript:changeType('.$row['id'].'';
+	    if($row['person']){
+		echo ',0)">Person</a>';
+	    }else{
+		echo ',1)">Hold</a>';
+	    }
+	    echo ' - <a href="javascript:openWindowTeams('.$row['id'].',\''.$row['name'].'\')">Skift Tilknyttede Hold</a>';
+	    echo ' - <a href="javascript:openWindowName('.$row['id'].',\''.$row['name'].'\')">Ændre Navn</a>';
+	    echo ' - <a href="javascript:void(ConfirmChoice('.$row['id'].'))">Fjern</a>';	
+	    echo "<br>";
+    }
+}
 break;
 
 case "clubrefs":
-  echo fetchText("Referees","header1");
+  echo fetchText("Referees","header2");
 break;
 ?>

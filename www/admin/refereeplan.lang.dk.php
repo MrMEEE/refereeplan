@@ -67,3 +67,9 @@ Delete Game??¤Slet Kamp??
 Teams¤Hold
 Referees¤Dommere
 Unavailable League/Team¤Ugyldig r&aelig;kke/hold
+Game with assigned table and referees¤Kamp med p&aring;sat bord/dommere
+Game wihtout assigned table and referees¤Kamp der mangler bord/dommere
+Changed/Moved Game¤&AElig;ndret/Flyttet kamp
+Cancelled Game¤Aflyst kamp
+Postponed Game¤Udsat kamp
+Move OK¤Flytning OK

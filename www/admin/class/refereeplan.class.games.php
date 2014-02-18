@@ -11,16 +11,19 @@ class gameObj{
       }      
 
       public function __toString(){
-      
-	    $teamlists["refereeteam1"] = "";
-	    $teamlists["refereeteam2"] = "";
-	    $teamlists["tableteam1"] = "";
-	    $teamlists["tableteam2"] = "";
-	    $teamlists["tableteam3"] = "";
-	    $result = mysql_query("select id, name from teams order by name asc");
+
+	    //require("connect.php");
+	    
+	    $teamlists["refereeteam1"] = " ";
+	    $teamlists["refereeteam2"] = " ";
+	    $teamlists["tableteam1"] = " ";
+	    $teamlists["tableteam2"] = " ";
+	    $teamlists["tableteam3"] = " ";
+	    $result = mysql_query("SELECT id, name FROM teams ORDER BY name ASC");
 	    
 	    while(list($id, $name)=mysql_fetch_row($result)) {
-		  foreach ($teamlists as $key => $value){  
+		  foreach ($teamlists as $key => $value){
+			if(!(preg_match('/table/',$key) && $name=="DBBF"))
 			if($this->data[$key.'id']==$id){
 			      $teamlists[$key].= "<option value=\"".$id."\" selected>".$name."</option>";
 			}else{
@@ -36,9 +39,9 @@ class gameObj{
                 $date.=substr($this->data['date'],0,4);
 		$return = "";
 
-		if($this->data['status']=='1' && $this->data['refereeteam1id']!='0' && $this->data['refereeteam2id']!='0' && $this->data['tableteam1id!']!='0' && $this->data['tableteam2id']!='0' && $this->data['tableteam3id']!='0'){
-		    mysql_query("UPDATE games SET status='0' WHERE id = '".$this->data['id']."'");
-		    $this->data['status']='0';
+		if($this->data['refereeteam1id']=='0' || $this->data['refereeteam2id']=='0' || $this->data['tableteam1id']=='0' || $this->data['tableteam2id']=='0' || $this->data['tableteam3id']=='0'){
+		    mysql_query("UPDATE games SET status='1' WHERE id = '".$this->data['id']."'");
+		    $this->data['status']='1';
 		}
 		
 		switch($this->data['status']){
@@ -130,6 +133,12 @@ class gameObj{
 		
 		}
 		
+		if($this->data['status'] == 2){
+			$acknowledge = '<a href="#" class="acknowledge">'.fetchText("Move OK").'</a>';
+		}else{
+			$acknowledge = "";
+		}
+		
 		$return .= '<table class="gameinfo">
 			      <tr>
 			      <td class="id-title">'.fetchText("Game number:").' <div class="number"><a href="gotoGame.php?gameID='.$this->data['id'].'"target="_blank">'.$this->data['id'].'</a></div></td>
@@ -140,6 +149,7 @@ class gameObj{
 			      </tr>
 			      <tr>
 			      <td colspan="4">'.fetchText("Description:").' <div class="text">'.$this->data['text'].'</div></td>
+			      <td>'.$acknowledge.'</td>
 			      </tr>
 			    </table>
 			    <table id="dutiesinfo-'.$this->data['id'].'" class="dutiesinfo" hidden="true">
@@ -162,13 +172,13 @@ class gameObj{
 			       <td>
 			        <select name="table1" id="table1Select">
 				  <option value="0">'.fetchText("Choose a Team").'</option>
-				  '.$tableteamlist1.'
+				  '.$teamlists["tableteam1"].'
 				</select>
 			       </td>
 			       <td>
 			        <select align="left" name="referee1" id="referee1Select" '.$confirmedstatus1.'>
 				  <option value="0">'.fetchText("Choose a Team").'</option>
-				  '.$refereeteamlist1.'
+				  '.$teamlists["refereeteam1"].'
 				</select>
 			       </td>
 			      </tr>
@@ -190,13 +200,13 @@ class gameObj{
 			       <td>
 			        <select name="table2" id="table2Select">
 				  <option value="0">'.fetchText("Choose a Team").'</option>
-				    '.$tableteamlist2.'
+				    '.$teamlists["tableteam2"].'
 				  </select>
 			       </td>
 			       <td>
 			        <select name="referee2" id="referee2Select" '.$confirmedstatus2.'>
 				  <option value="0">'.fetchText("Choose a Team").'</option>
-				  '.$refereeteamlist2.'
+				  '.$teamlists["refereeteam2"].'
 				  </select>
 			       </td>
 			      </tr>
@@ -209,7 +219,7 @@ class gameObj{
 			       <td>
 			       <select name="table3" id="table3Select">
 				 <option value="0">'.fetchText("Choose a Team").'</option>
-				 '.$tableteamlist3.'
+				 '.$teamlists["tableteam3"].'
 				</select>
 			       </td>
 			      </tr>
@@ -242,15 +252,16 @@ class gameObj{
 		}
 		$team = self::esc($team);
 		if(!$team) throw new Exception("Wrong update text!");
-		$status=mysql_fetch_assoc(mysql_query("SELECT status FROM games WHERE id = '$id'"));
-		$status=$status['status'];
-		mysql_query("   UPDATE games
-				SET $idlist='".$team."'
-				WHERE id=".$id);
+		$game=mysql_fetch_assoc(mysql_query("SELECT * FROM games WHERE id = '$id'"));
+		$status=$game['status'];
+		mysql_query("UPDATE games SET $idlist='".$team."' WHERE id=".$id);
 		if($status=='2'){
-		mysql_query("   UPDATE games
-				SET status='1'
-				WHERE id=".$id);
+		    mysql_query("UPDATE games SET status='1' WHERE id=".$id);
+		    $status='1';
+		}
+		
+		if($status=='1' && $game['refereeteam1id']!='0' && $game['refereeteam2id']!='0' && $game['tableteam1id']!='0' && $game['tableteam2id']!='0' && $game['tableteam3id']!='0'){
+		    mysql_query("UPDATE games SET status='0' WHERE id = '".$game['id']."'");
 		}
 	
 		if(mysql_affected_rows($GLOBALS['link'])!=1)
@@ -317,105 +328,5 @@ class gameObj{
 	}
 
 }
-
-
-/*class gameObj{
-	
-	public static function changeTeam($id, $team, $teamlist){
-		switch($teamlist){
-			case '1':
-				$idlist="refereeteam1id";
-			        break;
-			case '2':
-                                $idlist="refereeteam2id";
-                                break;
-			case '3':
-				$idlist="tableteam1id";
-                                break;
-			case '4':
-                                $idlist="tableteam2id";
-                                break;
-			case '5':
-                                $idlist="tableteam3id";
-                                break;	
-		}
-		$team = self::esc($team);
-		if(!$team) throw new Exception("Wrong update text!");
-		$status=mysql_fetch_assoc(mysql_query("SELECT status FROM games WHERE id = '$id'"));
-		$status=$status['status'];
-		mysql_query("   UPDATE games
-				SET $idlist='".$team."'
-				WHERE id=".$id);
-		if($status=='2'){
-		mysql_query("   UPDATE games
-				SET status='1'
-				WHERE id=".$id);
-		}
-	
-		if(mysql_affected_rows($GLOBALS['link'])!=1)
-			throw new Exception("Couldn't update item!");
-	}
-		
-	public static function edit($id, $text, $type){
-		echo '<script language="javascript">confirm("'.$text.'")</script>;';
-		$text = self::esc($text);
-		if(!$text) throw new Exception("Wrong update text!");
-		
-		mysql_query("UPDATE games SET $type='".$text."' WHERE id=".$id);
-		
-		if(mysql_affected_rows($GLOBALS['link'])!=1)
-			throw new Exception("Couldn't update item!");
-	}
-
-	
-	public static function delete($id){
-		
-		mysql_query("DELETE FROM games WHERE id=".$id);
-		
-		if(mysql_affected_rows($GLOBALS['link'])!=1)
-			throw new Exception("Couldn't delete item!");
-	}
-	
-		
-	public static function createNew($text){
-		
-		$text = self::esc($text);
-		if(!$text) throw new Exception("Wrong input data!");
-		
-		$posResult = mysql_query("SELECT MAX(position)+1 FROM games");
-		
-		if(mysql_num_rows($posResult))
-			list($position) = mysql_fetch_array($posResult);
-
-		//if(!$position) 
-		$position = 1;
-
-		mysql_query("INSERT INTO games SET text='".$text."',time='00:00:00',position = ".$position);
-
-		if(mysql_affected_rows($GLOBALS['link'])!=1)
-			throw new Exception("Error inserting Game!");
-		
-		// Creating a new Game and outputting it directly:
-		
-		echo (new gameObj(array(
-			'id'	=> mysql_insert_id($GLOBALS['link']),
-			'text'	=> $text
-		)));
-		
-		
-		exit;
-	}
-	
-	
-	public static function esc($str){
-		
-		if(ini_get('magic_quotes_gpc'))
-			$str = stripslashes($str);
-		
-		return mysql_real_escape_string(strip_tags($str));
-	}
-	
-} // closing the class definition
-*/
 
 ?>

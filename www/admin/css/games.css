@@ -37,7 +37,7 @@ ul.gameList li.ok{
 	background-color:#80FF99;
 }
 ul.gameList li.cancelled{
-        background-color:#1B9DE3;
+        background-color:#FFB1FF;
 }
 
 ul.gameList li.moved{
@@ -224,12 +224,3 @@ a.saveChangesPlace{
 .gameinfo .delete{
 	width:5%;
 }
-
-/*
-
-.gameinfo .place{
-	width:40%;
-}
-.gameinfo .delete{
-	width:5%;
-}*/

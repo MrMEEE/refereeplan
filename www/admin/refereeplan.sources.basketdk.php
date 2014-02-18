@@ -428,6 +428,10 @@ function syncTeam($teamid,$teamurl){
 	    mysql_query("INSERT INTO teams SET name='DBBF'");
 	}
 	
+	if(!mysql_num_rows(mysql_query("SELECT * FROM teams WHERE name = '-'"))){
+	    mysql_query("INSERT INTO teams SET name='-'");
+	}
+	
 	$dbbfentry=mysql_fetch_assoc(mysql_query("SELECT * FROM teams WHERE name = 'DBBF'"));
 	$dbbfid=$dbbfentry['id'];
 	
