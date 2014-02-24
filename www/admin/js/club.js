@@ -1,12 +1,13 @@
 $(document).ready(function(){
 	 
 	// Configuring the delete confirmation dialog
-	$("#dialog-confirm").dialog({
-		resizable: false,
+	$("#newTeamPlaceHolder").dialog({
+		resizable: true,
 		height:130,
 		width:400,
 		modal: true,
 		autoOpen:false,
+		dialogClass: 'newTeamDialog',
 		buttons: {
 			'Delete item': function() {
 				
@@ -22,10 +23,11 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('.game .delete').on('click',null,function(event){
+	$('.teamCreate').click(function(event){
 		event.preventDefault();
-		$("#dialog-confirm").dialog('open');
+		$("#newTeamPlaceHolder").dialog('open');
 	});
+	
 });
 
 function removeTeam(teamid){
@@ -48,3 +50,4 @@ function addAllTeams(){
 	document.mainForm.addAllTeams.value = true;
 	document.mainForm.submit();
 }
+

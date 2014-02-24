@@ -65,7 +65,7 @@ Cancel¤Annuller
 Are you sure you want to delete this game??¤Er du sikker på at du vil slette denne kamp??
 Delete Game??¤Slet Kamp??
 Teams¤Hold
-Referees¤Dommere
+Referees/Coaches¤Dommere/Tr&aelig;nere
 Unavailable League/Team¤Ugyldig r&aelig;kke/hold
 Game with assigned table and referees¤Kamp med p&aring;sat bord/dommere
 Game wihtout assigned table and referees¤Kamp der mangler bord/dommere
@@ -73,3 +73,6 @@ Changed/Moved Game¤&AElig;ndret/Flyttet kamp
 Cancelled Game¤Aflyst kamp
 Postponed Game¤Udsat kamp
 Move OK¤Flytning OK
+Change Contact¤Skift kontakt
+Change Name¤&AElig;ndre Navn
+New Team¤Nyt hold

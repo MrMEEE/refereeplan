@@ -61,28 +61,28 @@ case "clubteamsdbbf":
 break;
 
 case "clubteams":
-  echo fetchText("Teams","header2");
 
+  echo '<script type="text/javascript" src="js/club.js"></script>';
+  echo '<link rel="stylesheet" type="text/css" href="css/club.css">';
+  
+  echo fetchText("Teams","header2");
+  echo '<div id="newTeamPlaceHolder" title="'.fetchText("New Team").'">
+	  <div id="teamNameHolder">'.fetchText("Team Name:").'</div><input id="newTeamName">
+	  <div id="teamContactHolder">'.fetchText("Contact:").'</div><input id="newTeamContactId">
+	</div>';
+  echo '<a href="#" id="teamCreate" class="teamCreate">'.fetchText("New Team","header3").'</a>';
+  
   $query = mysql_query("SELECT * FROM `teams` ORDER BY `name` ASC");
 
   while($row = mysql_fetch_assoc($query)){
     if($row['name']!="-"){
 	echo $row['name'];
-	    echo ' - <a href="javascript:changeType('.$row['id'].'';
-	    if($row['person']){
-		echo ',0)">Person</a>';
-	    }else{
-		echo ',1)">Hold</a>';
-	    }
-	    echo ' - <a href="javascript:openWindowTeams('.$row['id'].',\''.$row['name'].'\')">Skift Tilknyttede Hold</a>';
-	    echo ' - <a href="javascript:openWindowName('.$row['id'].',\''.$row['name'].'\')">Ændre Navn</a>';
-	    echo ' - <a href="javascript:void(ConfirmChoice('.$row['id'].'))">Fjern</a>';	
-	    echo "<br>";
+	echo ' - <a href="javascript:teamsChangeUser('.$row['id'].',\''.$row['name'].'\')">'.fetchText("Change Contact").'</a>';
+	echo ' - <a href="javascript:teamsChangeName('.$row['id'].',\''.$row['name'].'\')">'.fetchText("Change Name").'</a>';
+	echo ' - <a href="javascript:teamsRemove('.$row['id'].')">Fjern</a>';	
+	echo "<br>";
     }
 }
 break;
 
-case "clubrefs":
-  echo fetchText("Referees","header2");
-break;
 ?>

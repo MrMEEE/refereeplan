@@ -1,0 +1,28 @@
+#newTeamContactId{
+    position: absolute;
+    top: 60px;
+    right: 15px;
+}
+
+#newTeamName{
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+#teamNameHolder{
+    position: absolute;
+    top: 15px;
+    left: 15px;
+}
+
+#teamContactHolder{
+    position: absolute;
+    top: 60px;
+    left: 15px;
+}
+
+#newTeamPlaceHolder{
+  
+  height: 85px  !important;
+}
