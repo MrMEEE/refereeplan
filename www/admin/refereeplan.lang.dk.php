@@ -76,3 +76,9 @@ Move OK¤Flytning OK
 Change Contact¤Skift kontakt
 Change Name¤&AElig;ndre Navn
 New Team¤Nyt hold
+Team Name:¤Hold Navn:
+Contact:¤Kontakt:
+Create Team¤Opret Hold
+No Contact¤Ingen kontaktperson
+Team Name is empty¤Holdnavn er tomt
+Team already exists¤Holdet existerer allerede

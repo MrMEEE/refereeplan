@@ -68,7 +68,15 @@ case "clubteams":
   echo fetchText("Teams","header2");
   echo '<div id="newTeamPlaceHolder" title="'.fetchText("New Team").'">
 	  <div id="teamNameHolder">'.fetchText("Team Name:").'</div><input id="newTeamName">
-	  <div id="teamContactHolder">'.fetchText("Contact:").'</div><input id="newTeamContactId">
+	  <div id="teamContactHolder">'.fetchText("Contact:").'</div>
+	  <select id="newTeamContactId">
+	    <option value="0">'.fetchText("No Contact").'</option>';
+	    $query = mysql_query("SELECT * FROM `users` ORDER BY `name` ASC");
+	    while($user = mysql_fetch_assoc($query)){
+		echo '<option value="'.$user["id"].'">'.$user["name"].'</option>';
+	    }
+	  echo '<select>
+	  <div id="teamMessageHolder"></div>
 	</div>';
   echo '<a href="#" id="teamCreate" class="teamCreate">'.fetchText("New Team","header3").'</a>';
   

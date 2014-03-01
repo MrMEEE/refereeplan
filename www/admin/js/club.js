@@ -1,6 +1,31 @@
 $(document).ready(function(){
 	 
 	// Configuring the delete confirmation dialog
+	
+	var dialog_buttons = {}; 
+	dialog_buttons[fetchText("Create Team")] = function(){
+	     var closeDialog = 0;
+	     if($('#newTeamName').val() == ""){
+		$('#teamMessageHolder').text(fetchText("Team Name is empty")).fadeIn(500).fadeOut(500).fadeIn(500).fadeOut(500);
+	     }else{
+		$.ajax({type: "POST", url: "ajax/refereeplan.ajax.club.php",context: this,async:true,dataType: "json",data: {'action':'checkTeamExists','name':$('#newTeamName').val()} ,success: function(data){
+			if(data[0].exists > 0){
+			      $('#teamMessageHolder').text(fetchText("Team already exists")).fadeIn(500).fadeOut(500).fadeIn(500).fadeOut(500);
+			}else{
+			      closeDialog = 1;
+			      $.ajax({type: "POST", url: "ajax/refereeplan.ajax.club.php",async:true,dataType: "json",data: {'action':'createTeam','name':$('#newTeamName').val(),'contactid':$('#newTeamContactId').val()}        });
+			      $(this).dialog('close');
+			}
+			
+		},error: function(xhr, status, err) {
+		  alert(status + ": " + err);
+		}           
+      		});
+	     }
+	}
+	dialog_buttons[fetchText("Cancel")] = function(){ $(this).dialog('close'); }   
+	$('#instanceDialog').dialog({ buttons: dialog_buttons });
+  
 	$("#newTeamPlaceHolder").dialog({
 		resizable: true,
 		height:130,
@@ -8,23 +33,13 @@ $(document).ready(function(){
 		modal: true,
 		autoOpen:false,
 		dialogClass: 'newTeamDialog',
-		buttons: {
-			'Delete item': function() {
-				
-				$.post("ajax/refereeplan.ajax.games.php",{"action":"delete","id":currentGame.data('id')},function(msg){
-					currentGame.fadeOut('fast');
-				})
-				
-				$(this).dialog('close');
-			},
-			Cancel: function() {
-				$(this).dialog('close');
-			}
-		}
+		buttons: dialog_buttons
 	});
 	
 	$('.teamCreate').click(function(event){
 		event.preventDefault();
+		$('#newTeamName').val("");
+		$('#newTeamContactId').val(0);
 		$("#newTeamPlaceHolder").dialog('open');
 	});
 	
