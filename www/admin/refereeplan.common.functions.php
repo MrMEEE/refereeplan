@@ -10,9 +10,9 @@ function showHeader(){
         <body bgcolor="silver">
         <title>'.$config['clubname'].' Dommerbordsplan</title>
         <link rel="stylesheet" type="text/css" href="css/general.css">
-        <script type="text/javascript" src="js/general.js"></script>
         <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.10.3.js"></script>
+        <script type="text/javascript" src="js/general.js"></script>
         <link rel="stylesheet" href="css/jquery-ui-1.10.3-ui-lightness.css">
         <meta charset="utf-8">';
 
@@ -62,20 +62,24 @@ function showNavigation(){
 }
 
 function showNavigationChildren($parent){
+  
+  if(mysql_num_rows(getCurrentUser()) > 0){
 
-  $mysql_select_children = "SELECT * FROM `navigation` WHERE `parent`='".$parent."' ORDER BY `order`,`id`";
-  $query = mysql_query($mysql_select_children);
-  while ($child = mysql_fetch_array($query)) {
-      if($child["disabled"]){
-      echo '<li><a href="#">'.fetchText($child["title"]).'</a>
-              <ul>';
-      }else{
-          echo '<li><a href="#" onclick="javascript:changeState(\''.$child["name"].'\')">'.fetchText($child["title"]).'</a>
-            <ul>';
-      }
-      showNavigationChildren($child["id"]);
-      echo '</ul>
-            </li>';
+    $mysql_select_children = "SELECT * FROM `navigation` WHERE `parent`='".$parent."' ORDER BY `order`,`id`";
+    $query = mysql_query($mysql_select_children);
+    while ($child = mysql_fetch_array($query)) {
+	if($child["disabled"]){
+	echo '<li><a href="#">'.fetchText($child["title"]).'</a>
+		<ul>';
+	}else{
+	    echo '<li><a href="#" onclick="javascript:changeState(\''.$child["name"].'\')">'.fetchText($child["title"]).'</a>
+	      <ul>';
+	}
+	showNavigationChildren($child["id"]);
+	echo '</ul>
+	      </li>';
+    }
+  
   }
 
 }
@@ -86,21 +90,35 @@ function showContent($state){
           <tr>
             <td>';
   
-  $showstate = "switch(".$state."){";
-    
-    foreach (glob("refereeplan.state.*.php") as $filename){
-    
-      $showstate .= str_replace('?>','',str_replace('<?php','',file_get_contents($filename)));
-    
-    }
+  if(mysql_num_rows(getCurrentUser()) == 0){
+	  session_start();
+	  echo fetchText("Please log in.","header2");
+	  echo '<center>'.fetchText("Username").'<br><input name="username" class="password" type="text" id="username"><br><br>
+		'.fetchText("Password").'<br><input name="password" class="password" type="text" id="password"><br><br>
+		<input type="submit" class="loginButton" name="loginButton" value="Login"></center>';
+		
+	  echo '<div id="wrongUserPass" title="'.fetchText("False credentials").'"><div id="messageHolder">'.fetchText("Wrong Username or Password").'</div></div>';
+	  
+  }else{
+  
+	  $showstate = "switch(".$state."){";
+	    
+	    foreach (glob("refereeplan.state.*.php") as $filename){
+	    
+	      $showstate .= str_replace('?>','',str_replace('<?php','',file_get_contents($filename)));
+	    
+	    }
 
-  $showstate .= 'default:
-      echo "Content not found...";
-      break;
+	  $showstate .= 'default:
+	      echo "Content not found...";
+	      break;
+	  
+	  }';
+	  
+	  eval($showstate);
   
-  }';
+  }
   
-  eval($showstate);
   echo '<br><br>';
   
   echo '   </td>
@@ -248,6 +266,25 @@ function stringToJava($text){
   }
   
   return $text;
+
+}
+
+function getCurrentUser($scope="SESSION"){
+
+  if($scope == "POST"){
+      $username = stripslashes($_POST['username']);
+      $password = stripslashes($_POST['password']);
+  }else{
+      session_start();
+      $username = stripslashes($_SESSION['rpusername']);
+      $password = stripslashes($_SESSION['rppasswd']);
+  }
+  $username = mysql_real_escape_string($username);
+  $password = mysql_real_escape_string($password);
+  
+  $currentuser = mysql_query("SELECT * FROM `users` WHERE `username`='".$username."' AND `passwd`='".$password."'");
+  
+  return $currentuser;
 
 }
 

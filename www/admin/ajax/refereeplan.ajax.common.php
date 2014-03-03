@@ -15,6 +15,29 @@ switch($_POST['action']){
 	  echo $json;
     
     break;
+    
+    case "logon":
+    
+	  if(mysql_num_rows(getCurrentUser("POST")) > 0){
+		$status = "0";
+		session_start();
+		$_SESSION['rpusername']=$_POST['username'];
+		$_SESSION['rppasswd']=$_POST['password'];
+		session_write_close();
+	  }else{
+		$status = "1";
+	  }
+	  	  
+	  $json = '[ { "status": "'.$status.'" } ]';
+	  
+	  echo $json;
+    
+    break;
+    
+    case "logout":
+	  session_unset();
+	  session_destroy();
+    break;
 
 }
 

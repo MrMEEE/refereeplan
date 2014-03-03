@@ -82,3 +82,8 @@ Create Team¤Opret Hold
 No Contact¤Ingen kontaktperson
 Team Name is empty¤Holdnavn er tomt
 Team already exists¤Holdet existerer allerede
+Please log in.¤Log venligst ind.
+Wrong Username or Password¤Forkert brugernavn eller adgangskode
+False credentials¤Ingen adgang
+Username¤Brugernavn
+Password¤Adgangskode
