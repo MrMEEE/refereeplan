@@ -11,15 +11,13 @@ class gameObj{
       }      
 
       public function __toString(){
-
-	    //require("connect.php");
 	    
 	    $teamlists["refereeteam1"] = " ";
 	    $teamlists["refereeteam2"] = " ";
 	    $teamlists["tableteam1"] = " ";
 	    $teamlists["tableteam2"] = " ";
 	    $teamlists["tableteam3"] = " ";
-	    $result = mysql_query("SELECT id, name FROM teams ORDER BY name ASC");
+	    $result = ref_mysql_query("SELECT id, name FROM teams ORDER BY name ASC");
 	    
 	    while(list($id, $name)=mysql_fetch_row($result)) {
 		  foreach ($teamlists as $key => $value){
@@ -40,8 +38,10 @@ class gameObj{
 		$return = "";
 
 		if($this->data['refereeteam1id']=='0' || $this->data['refereeteam2id']=='0' || $this->data['tableteam1id']=='0' || $this->data['tableteam2id']=='0' || $this->data['tableteam3id']=='0'){
-		    mysql_query("UPDATE games SET status='1' WHERE id = '".$this->data['id']."'");
-		    $this->data['status']='1';
+		    if($this->data['status'] != '1'){
+			ref_mysql_query("UPDATE games SET status='1' WHERE id = '".$this->data['id']."'");
+			$this->data['status']='1';
+		    }
 		}
 		
 		switch($this->data['status']){
@@ -252,16 +252,16 @@ class gameObj{
 		}
 		$team = self::esc($team);
 		if(!$team) throw new Exception("Wrong update text!");
-		$game=mysql_fetch_assoc(mysql_query("SELECT * FROM games WHERE id = '$id'"));
+		$game=mysql_fetch_assoc(ref_mysql_query("SELECT * FROM games WHERE id = '$id'"));
 		$status=$game['status'];
-		mysql_query("UPDATE games SET $idlist='".$team."' WHERE id=".$id);
+		ref_mysql_query("UPDATE games SET $idlist='".$team."' WHERE id=".$id);
 		if($status=='2'){
-		    mysql_query("UPDATE games SET status='1' WHERE id=".$id);
+		    ref_mysql_query("UPDATE games SET status='1' WHERE id=".$id);
 		    $status='1';
 		}
 		
 		if($status=='1' && $game['refereeteam1id']!='0' && $game['refereeteam2id']!='0' && $game['tableteam1id']!='0' && $game['tableteam2id']!='0' && $game['tableteam3id']!='0'){
-		    mysql_query("UPDATE games SET status='0' WHERE id = '".$game['id']."'");
+		    ref_mysql_query("UPDATE games SET status='0' WHERE id = '".$game['id']."'");
 		}
 	
 		if(mysql_affected_rows($GLOBALS['link'])!=1)
@@ -273,7 +273,7 @@ class gameObj{
 		$text = self::esc($text);
 		if(!$text) throw new Exception("Wrong update text!");
 		
-		mysql_query("UPDATE games SET $type='".$text."' WHERE id=".$id);
+		ref_mysql_query("UPDATE games SET $type='".$text."' WHERE id=".$id);
 		
 		if(mysql_affected_rows($GLOBALS['link'])!=1)
 			throw new Exception("Couldn't update item!");
@@ -282,7 +282,7 @@ class gameObj{
 	
 	public static function delete($id){
 		
-		mysql_query("DELETE FROM games WHERE id=".$id);
+		ref_mysql_query("DELETE FROM games WHERE id=".$id);
 		
 		if(mysql_affected_rows($GLOBALS['link'])!=1)
 			throw new Exception("Couldn't delete item!");
@@ -294,7 +294,7 @@ class gameObj{
 		$text = self::esc($text);
 		if(!$text) throw new Exception("Wrong input data!");
 		
-		$posResult = mysql_query("SELECT MAX(position)+1 FROM games");
+		$posResult = ref_mysql_query("SELECT MAX(position)+1 FROM games");
 		
 		if(mysql_num_rows($posResult))
 			list($position) = mysql_fetch_array($posResult);
@@ -302,7 +302,7 @@ class gameObj{
 		//if(!$position) 
 		$position = 1;
 
-		mysql_query("INSERT INTO games SET text='".$text."',time='00:00:00',position = ".$position);
+		ref_mysql_query("INSERT INTO games SET text='".$text."',time='00:00:00',position = ".$position);
 
 		if(mysql_affected_rows($GLOBALS['link'])!=1)
 			throw new Exception("Error inserting Game!");

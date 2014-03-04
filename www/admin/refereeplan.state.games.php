@@ -7,7 +7,7 @@ case "refereeplanupdate":
     $config = getConfiguration();
     echo fetchText("Update Games","header2");
         
-    mysql_query("UPDATE `config` SET `value`=now() WHERE `name`='lastupdated'");
+    ref_mysql_query("UPDATE `config` SET `value`=now() WHERE `name`='lastupdated'");
     
     echo '<input type="submit" name="syncNow" id="syncNow" value="'.fetchText("Syncronize").'" onclick="javascript:doSync(); this.disabled=true; return false;"><br><br>
 	  <input type="hidden" name="syncAction">
@@ -28,8 +28,8 @@ case "refereeplanupcomminggames":
     
     echo showGamesCommon();
     
-    $query = mysql_query("SELECT * FROM `games` WHERE CURDATE() <= `date` AND `homegame`= 1 ORDER BY `date`,`time` ASC ");
-    $query2 = mysql_query("SELECT * FROM `games` WHERE `date` = '0000-00-00' AND `homegame`= 1 ORDER BY `date`,`time` ASC ");
+    $query = ref_mysql_query("SELECT * FROM `games` WHERE CURDATE() <= `date` AND `homegame`= 1 ORDER BY `date`,`time` ASC ");
+    $query2 = ref_mysql_query("SELECT * FROM `games` WHERE `date` = '0000-00-00' AND `homegame`= 1 ORDER BY `date`,`time` ASC ");
 
     $games = array();
     

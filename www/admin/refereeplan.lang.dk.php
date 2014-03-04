@@ -87,3 +87,5 @@ Wrong Username or Password¤Forkert brugernavn eller adgangskode
 False credentials¤Ingen adgang
 Username¤Brugernavn
 Password¤Adgangskode
+Select Club¤V&aelig;lg klub
+Club¤Klub

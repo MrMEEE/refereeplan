@@ -24,7 +24,7 @@ switch($_POST['syncAction']){
   break;
   case "getTeams":
   
-      $calendars = mysql_query("SELECT * FROM `calendars`");
+      $calendars = ref_mysql_query("SELECT * FROM `calendars`");
       $json = '[ ';
 
       while($cal=mysql_fetch_assoc($calendars)){
@@ -86,7 +86,7 @@ switch($_POST['action']){
 	
 	case 'getclass':
 		
-		$game = mysql_fetch_assoc(mysql_query("SELECT * FROM `games` WHERE `id`='".$_POST['id']."'"));
+		$game = mysql_fetch_assoc(ref_mysql_query("SELECT * FROM `games` WHERE `id`='".$_POST['id']."'"));
 		
 		switch($game['status']){
 		
@@ -114,13 +114,13 @@ switch($_POST['action']){
 	break;
 	
 	case 'acknowledgemove':
-		$game = mysql_fetch_assoc(mysql_query("SELECT * FROM `games` WHERE `id`='".$_POST['id']."'"));
+		$game = mysql_fetch_assoc(ref_mysql_query("SELECT * FROM `games` WHERE `id`='".$_POST['id']."'"));
 		
 		if($game['status'] == 2){
-		    mysql_query("UPDATE games SET status='1' WHERE id=".$game['id']);
+		    ref_mysql_query("UPDATE games SET status='1' WHERE id=".$game['id']);
 		    $status='1';
 		    if($game['refereeteam1id']!='0' && $game['refereeteam2id']!='0' && $game['tableteam1id']!='0' && $game['tableteam2id']!='0' && $game['tableteam3id']!='0'){
-			  mysql_query("UPDATE games SET status='0' WHERE id = '".$game['id']."'");
+			  ref_mysql_query("UPDATE games SET status='0' WHERE id = '".$game['id']."'");
 		    }
 		}
 	break;

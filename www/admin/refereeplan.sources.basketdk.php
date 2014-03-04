@@ -34,8 +34,8 @@ function addAllTeams(){
     $i=0;
     foreach ($matches[2] as $urls){
       $name=$matches2[3][$i];
-      if(!mysql_num_rows(mysql_query("SELECT * FROM `calendars` WHERE `address` = 'http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls'"))){
-        mysql_query("INSERT into calendars (`address`, `team`) VALUES ('http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls', '".fixCharacters($name)."')");
+      if(!mysql_num_rows(ref_mysql_query("SELECT * FROM `calendars` WHERE `address` = 'http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls'"))){
+        ref_mysql_query("INSERT into calendars (`address`, `team`) VALUES ('http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls', '".fixCharacters($name)."')");
         $addedteams++;
       }
       $i=$i+1;
@@ -424,15 +424,15 @@ function syncTeam($teamid,$teamurl){
 	    $courts = array_merge(getCourts($clubids[$i]),$courts);
 	}
 	
-	if(!mysql_num_rows(mysql_query("SELECT * FROM teams WHERE name = 'DBBF'"))){
-	    mysql_query("INSERT INTO teams SET name='DBBF'");
+	if(!mysql_num_rows(ref_mysql_query("SELECT * FROM teams WHERE name = 'DBBF'"))){
+	    ref_mysql_query("INSERT INTO teams SET name='DBBF'");
 	}
 	
-	if(!mysql_num_rows(mysql_query("SELECT * FROM teams WHERE name = '-'"))){
-	    mysql_query("INSERT INTO teams SET name='-'");
+	if(!mysql_num_rows(ref_mysql_query("SELECT * FROM teams WHERE name = '-'"))){
+	    ref_mysql_query("INSERT INTO teams SET name='-'");
 	}
 	
-	$dbbfentry=mysql_fetch_assoc(mysql_query("SELECT * FROM teams WHERE name = 'DBBF'"));
+	$dbbfentry=mysql_fetch_assoc(ref_mysql_query("SELECT * FROM teams WHERE name = 'DBBF'"));
 	$dbbfid=$dbbfentry['id'];
 	
 	$dom = new DOMDocument();  
@@ -535,7 +535,7 @@ function syncTeam($teamid,$teamurl){
 					$updatequery .= ",refereeteam2id='$dbbfid',referee2name='$ref2'";
 				}
 				$updatequery .=" WHERE id='$id'";
-				mysql_query($updatequery);
+				ref_mysql_query($updatequery);
 			}
 		      
 			$fulldate= $cols->item(1)->nodeValue;
@@ -565,9 +565,9 @@ function syncTeam($teamid,$teamurl){
 			
 			//$returns[] = $text;
 
-			if(mysql_num_rows(mysql_query("SELECT id FROM games WHERE id = '$id'"))) {
-				mysql_query("UPDATE `games` set place='$place' WHERE id='$id'");
-				$query=mysql_fetch_assoc(mysql_query("SELECT * FROM games WHERE id = '$id'"));
+			if(mysql_num_rows(ref_mysql_query("SELECT id FROM games WHERE id = '$id'"))) {
+				ref_mysql_query("UPDATE `games` set place='$place' WHERE id='$id'");
+				$query=mysql_fetch_assoc(ref_mysql_query("SELECT * FROM games WHERE id = '$id'"));
 				$oldtext=$query['text'];
 				$olddate=$query['date'];
 				$oldtime=$query['time'];
@@ -576,7 +576,7 @@ function syncTeam($teamid,$teamurl){
 				$oldresult=$query['result'];
 				$oldgrandprix=$query['grandprix'];
 				if($oldtext==$text && $olddate==$date && substr($oldtime,0,5)==$time && $oldathome==$athome && $oldteamid==$teamid && $oldresult==$result && $oldgrandprix==$grandprix && $status!=4){
-					mysql_query("UPDATE `games` set dt_added=now() WHERE id='$id'");
+					ref_mysql_query("UPDATE `games` set dt_added=now() WHERE id='$id'");
 				}else{
 					if($oldtext!=$text && $olddate==$date && substr($oldtime,0,5)==$time){
 						$returns[] = fetchText("Updating Info for Game: ").$id;
@@ -586,20 +586,20 @@ function syncTeam($teamid,$teamurl){
 					}
 					if($status != 4){
 						if($gamechanged){
-							mysql_query("UPDATE games SET status='2' WHERE id = '$id'");
+							ref_mysql_query("UPDATE games SET status='2' WHERE id = '$id'");
 						}
 					}else{
 						if($gamechanged){
-							mysql_query("UPDATE games SET status='$status' WHERE id = '$id'");
+							ref_mysql_query("UPDATE games SET status='$status' WHERE id = '$id'");
 						}
 					}
-					mysql_query("UPDATE games SET text='$text',date='$date',time='$time',dt_added=now(),homegame='$athome',team='$teamid',result='$result',grandprix='$grandprix' WHERE id = '$id'");
+					ref_mysql_query("UPDATE games SET text='$text',date='$date',time='$time',dt_added=now(),homegame='$athome',team='$teamid',result='$result',grandprix='$grandprix' WHERE id = '$id'");
 				}
 			}else{
 				if($status!=6){
 					$status=1;
 				}
-				mysql_query("INSERT INTO games (`id`, `text`, `date`, `time`, `status`, `tableteam3id`, `place`, `homegame`,`team`,`grandprix`) VALUES ('$id', '$text', '$date', '$time','$status',9999,'$place','$athome','$teamid','$grandprix')");
+				ref_mysql_query("INSERT INTO games (`id`, `text`, `date`, `time`, `status`, `tableteam3id`, `place`, `homegame`,`team`,`grandprix`) VALUES ('$id', '$text', '$date', '$time','$status',9999,'$place','$athome','$teamid','$grandprix')");
 				if($athome){
 					$returns[] = fetchText("Adding Homegame: ").$id;
 				}else{

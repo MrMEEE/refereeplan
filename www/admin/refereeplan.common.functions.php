@@ -10,6 +10,7 @@ function showHeader(){
         <body bgcolor="silver">
         <title>'.$config['clubname'].' Dommerbordsplan</title>
         <link rel="stylesheet" type="text/css" href="css/general.css">
+        <script type="text/javascript" src="js/sha256.js"></script>
         <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.10.3.js"></script>
         <script type="text/javascript" src="js/general.js"></script>
@@ -66,7 +67,7 @@ function showNavigationChildren($parent){
   if(mysql_num_rows(getCurrentUser()) > 0){
 
     $mysql_select_children = "SELECT * FROM `navigation` WHERE `parent`='".$parent."' ORDER BY `order`,`id`";
-    $query = mysql_query($mysql_select_children);
+    $query = ref_mysql_query($mysql_select_children);
     while ($child = mysql_fetch_array($query)) {
 	if($child["disabled"]){
 	echo '<li><a href="#">'.fetchText($child["title"]).'</a>
@@ -93,14 +94,24 @@ function showContent($state){
   if(mysql_num_rows(getCurrentUser()) == 0){
 	  session_start();
 	  echo fetchText("Please log in.","header2");
-	  echo '<center>'.fetchText("Username").'<br><input name="username" class="password" type="text" id="username"><br><br>
-		'.fetchText("Password").'<br><input name="password" class="password" type="text" id="password"><br><br>
-		<input type="submit" class="loginButton" name="loginButton" value="Login"></center>';
+	  echo '<center>'.fetchText("Username").'<br><input name="username" class="username" type="text" id="username"><br><br>
+		'.fetchText("Password").'<br><input name="password" class="password" type="password" id="password"><br><br>
+		'.fetchText("Club").'<br><select name="clubSelect" class="clubSelect" id="clubSelect">
+		<option value="0">'.fetchText("Select Club").'</option>';
+	  
+	  $clubs = ref_mysql_query("SELECT * FROM `clubs`");
+	  
+	  while($club = mysql_fetch_assoc($clubs)){
+	    
+	     echo '<option value="'.$club["id"].'">'.$club["name"].'</option>';
+	  
+	  }
+		
+	  echo '</select><br><br><input type="submit" class="loginButton" name="loginButton" value="Login"></center>';
 		
 	  echo '<div id="wrongUserPass" title="'.fetchText("False credentials").'"><div id="messageHolder">'.fetchText("Wrong Username or Password").'</div></div>';
 	  
   }else{
-  
 	  $showstate = "switch(".$state."){";
 	    
 	    foreach (glob("refereeplan.state.*.php") as $filename){
@@ -130,7 +141,7 @@ function showContent($state){
 
 function getConfiguration(){
 
-  $configs = mysql_query("SELECT `name`,`value` FROM `config`");
+  $configs = ref_mysql_query("SELECT `name`,`value` FROM `config`");
   
   while($config = mysql_fetch_assoc($configs)){
   
@@ -274,17 +285,47 @@ function getCurrentUser($scope="SESSION"){
   if($scope == "POST"){
       $username = stripslashes($_POST['username']);
       $password = stripslashes($_POST['password']);
+      $club = stripslashes($_POST['club']);
   }else{
       session_start();
       $username = stripslashes($_SESSION['rpusername']);
       $password = stripslashes($_SESSION['rppasswd']);
+      $club = stripslashes($_SESSION['rpclubid']);
   }
   $username = mysql_real_escape_string($username);
   $password = mysql_real_escape_string($password);
+  $club = mysql_real_escape_string($club);
   
-  $currentuser = mysql_query("SELECT * FROM `users` WHERE `username`='".$username."' AND `passwd`='".$password."'");
+  $currentuser = ref_mysql_query("SELECT * FROM `users` WHERE `username`='".$username."' AND `passwd`='".$password."' AND `clubid`='".$club."'");
   
   return $currentuser;
+
+}
+
+function ref_mysql_query($query){
+
+  if((strpos($query, 'INSERT INTO') !== false) || (strpos($query, 'UPDATE') !== false) || (strpos($query, 'DELETE FROM') !== false)){
+      
+      $action = substr($query,0,6);
+      if($action == "UPDATE"){
+	    $rest = substr($query,7);
+      }else{
+	    $rest = substr($query,12);
+      }
+      
+      $rest_array = explode(" ",$rest);
+      
+      $table = str_replace("`","",str_replace("'","",implode(' ',array_slice($rest_array, 0, 1))));
+      
+      $parameters = str_replace("`","",str_replace("'","",implode(' ',array_slice($rest_array, 1))));
+      
+      $user = mysql_fetch_assoc(getCurrentUser());
+            
+      mysql_query("INSERT INTO `log` (`time`,`action`,`parameters`,`table`,`userid`) VALUES (NOW(),'".$action."','".$parameters."','".$table."','".$user['id']."')");
+  
+  }
+  
+  return mysql_query($query);
 
 }
 

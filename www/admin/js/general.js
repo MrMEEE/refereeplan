@@ -9,13 +9,16 @@ $(document).ready(function(){
 		buttons: {
 			Ok: function() {
 				$(this).dialog('close');
+				$("#password").val('');
+				$("#password").focus();
 			}
 		}
       });
       
       $('.loginButton').on('click',null,function(event){
 	    event.preventDefault();
-	    $.ajax({type: "POST", url: "ajax/refereeplan.ajax.common.php",async:false,dataType: "json",data:{ action: "logon", username: $("#username").val(), password: $("#password").val() } ,success: function(data){
+	    var password = CryptoJS.SHA256($("#password").val()).toString();
+	    $.ajax({type: "POST", url: "ajax/refereeplan.ajax.common.php",async:false,dataType: "json",data:{ action: "logon", username: $("#username").val(), password: password, club: $("#clubSelect").val()} ,success: function(data){
 		  if(data[0].status == 1){
 			$("#wrongUserPass").dialog('open');
 		  }else{

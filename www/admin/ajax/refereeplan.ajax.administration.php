@@ -3,13 +3,13 @@
   
   if($_POST["changeLanguageSource"] != ""){
   
-    mysql_query("UPDATE `config` SET `value`='".$_POST['changeLanguageSource']."' WHERE `name`='language'");
+    ref_mysql_query("UPDATE `config` SET `value`='".$_POST['changeLanguageSource']."' WHERE `name`='language'");
   
   }
   
   if($_POST["changeSource"] != ""){
   
-    mysql_query("UPDATE `config` SET `value`='".$_POST['changeSource']."' WHERE `name`='gamesource'");
+    ref_mysql_query("UPDATE `config` SET `value`='".$_POST['changeSource']."' WHERE `name`='gamesource'");
   
   }
   
@@ -26,14 +26,14 @@
     $clubids=implode(",",$clubids_arr);
     file_put_contents ( "test" , $clubids );
 
-    mysql_query("UPDATE `config` SET `value`='".$clubname."' WHERE `name`='clubname'");
-    mysql_query("UPDATE `config` SET `value`='".$clubids."' WHERE `name`='clubids'");  
+    ref_mysql_query("UPDATE `config` SET `value`='".$clubname."' WHERE `name`='clubname'");
+    ref_mysql_query("UPDATE `config` SET `value`='".$clubids."' WHERE `name`='clubids'");  
 
   }
   
   if(isset($_POST["updatesUrl"])){
   
-    mysql_query("UPDATE `config` SET `value`='".$_POST["updatesUrl"]."' WHERE `name`='updatesurl'");
+    ref_mysql_query("UPDATE `config` SET `value`='".$_POST["updatesUrl"]."' WHERE `name`='updatesurl'");
   
   }
   
@@ -62,7 +62,7 @@
     
 		if(!in_array($_POST["gymName"],$arrGyms)){
 			if($_POST["gymName"] != ""){
-				mysql_query("UPDATE `config` SET `value`='".$config['gyms'].",".fixCharacters($_POST["gymName"])."' WHERE `name`='gyms'");
+				ref_mysql_query("UPDATE `config` SET `value`='".$config['gyms'].",".fixCharacters($_POST["gymName"])."' WHERE `name`='gyms'");
 			}
 		}
 		
@@ -72,7 +72,7 @@
 		if(in_array($_POST["gymName"],$arrGyms)){
 			$newgyms = str_replace($_POST["gymName"],"",$config['gyms']);
 			$newgyms = str_replace(",,",",",$newgyms);
-			mysql_query("UPDATE `config` SET `value`='".$newgyms."' WHERE `name`='gyms'");
+			ref_mysql_query("UPDATE `config` SET `value`='".$newgyms."' WHERE `name`='gyms'");
 		}
 		break;
     }

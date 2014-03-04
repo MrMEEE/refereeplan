@@ -6,7 +6,7 @@ switch($_POST['action']){
 
   case "checkTeamExists":
         
-        $query = mysql_query("SELECT * FROM `teams` WHERE `name`='".$_POST['name']."'");
+        $query = ref_mysql_query("SELECT * FROM `teams` WHERE `name`='".$_POST['name']."'");
         
         $exists = mysql_num_rows($query);
 
@@ -18,7 +18,7 @@ switch($_POST['action']){
   
   case "createTeam":
   
-	mysql_query("INSERT INTO `teams` (`name`,`contactid`) VALUES ('".$_POST['name']."','".$_POST['contactid']."')");
+	ref_mysql_query("INSERT INTO `teams` (`name`,`contactid`) VALUES ('".$_POST['name']."','".$_POST['contactid']."')");
   
   break;
   

@@ -5,14 +5,14 @@ case "clubteamsdbbf":
   
   if($_POST["removeTeam"]){
   
-    mysql_query("DELETE FROM `calendars` WHERE `id`='".$_POST["removeTeam"]."'");
+    ref_mysql_query("DELETE FROM `calendars` WHERE `id`='".$_POST["removeTeam"]."'");
     $warning = fetchText("Team/League was removed.");
   
   }
   
   if($_POST["removeAllTeams"]){
     
-    mysql_query("DELETE FROM `calendars`");
+    ref_mysql_query("DELETE FROM `calendars`");
     $warning = fetchText("All of the Teams and Leagues has been removed.");
     
   }
@@ -39,7 +39,7 @@ case "clubteamsdbbf":
   echo fetchText("Remove all of the Clubs Teams and Leagues");
   echo '</a><br><br>';
   
-  $query = mysql_query("SELECT * FROM `calendars` ORDER BY `team`");
+  $query = ref_mysql_query("SELECT * FROM `calendars` ORDER BY `team`");
   
   echo fetchText("Teams:","header3");
   
@@ -71,7 +71,7 @@ case "clubteams":
 	  <div id="teamContactHolder">'.fetchText("Contact:").'</div>
 	  <select id="newTeamContactId">
 	    <option value="0">'.fetchText("No Contact").'</option>';
-	    $query = mysql_query("SELECT * FROM `users` ORDER BY `name` ASC");
+	    $query = ref_mysql_query("SELECT * FROM `users` ORDER BY `name` ASC");
 	    while($user = mysql_fetch_assoc($query)){
 		echo '<option value="'.$user["id"].'">'.$user["name"].'</option>';
 	    }
@@ -80,7 +80,7 @@ case "clubteams":
 	</div>';
   echo '<a href="#" id="teamCreate" class="teamCreate">'.fetchText("New Team","header3").'</a>';
   
-  $query = mysql_query("SELECT * FROM `teams` ORDER BY `name` ASC");
+  $query = ref_mysql_query("SELECT * FROM `teams` ORDER BY `name` ASC");
 
   while($row = mysql_fetch_assoc($query)){
     if($row['name']!="-"){

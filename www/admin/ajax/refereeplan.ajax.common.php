@@ -23,20 +23,18 @@ switch($_POST['action']){
 		session_start();
 		$_SESSION['rpusername']=$_POST['username'];
 		$_SESSION['rppasswd']=$_POST['password'];
+		$_SESSION['rpclubid']=$_POST['club'];
 		session_write_close();
 	  }else{
 		$status = "1";
 	  }
+	  
+	  ref_mysql_query("INSERT INTO `logons` (`username`,`passwdhash`,`time`,`status`,`clubid`) VALUES ('".$_POST['username']."','".$_POST['password']."',NOW(),'".$status."','".$_POST['club']."')");
 	  	  
 	  $json = '[ { "status": "'.$status.'" } ]';
 	  
 	  echo $json;
     
-    break;
-    
-    case "logout":
-	  session_unset();
-	  session_destroy();
     break;
 
 }
