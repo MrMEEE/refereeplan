@@ -86,6 +86,8 @@ function showNavigationChildren($parent){
 }
 
 function showContent($state){
+
+  $currentState = $state;
   
   echo '<table width=90%>
           <tr>

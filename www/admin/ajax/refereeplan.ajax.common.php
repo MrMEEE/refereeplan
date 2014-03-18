@@ -29,7 +29,7 @@ switch($_POST['action']){
 		$status = "1";
 	  }
 	  
-	  ref_mysql_query("INSERT INTO `logons` (`username`,`passwdhash`,`time`,`status`,`clubid`) VALUES ('".$_POST['username']."','".$_POST['password']."',NOW(),'".$status."','".$_POST['club']."')");
+	  mysql_query("INSERT INTO `logons` (`username`,`passwdhash`,`time`,`status`,`clubid`) VALUES ('".$_POST['username']."','".$_POST['password']."',NOW(),'".$status."','".$_POST['club']."')");
 	  	  
 	  $json = '[ { "status": "'.$status.'" } ]';
 	  

@@ -1,4 +1,4 @@
-Teams from DBBF¤Hold fra DBBF
+External Teams¤Eksterne hold
 Are you sure that you want to remove this team/league??¤Er du sikker p&aring; at du vil slette dette Hold/denne Pulje??
 Are you sure that you want to remove all teams/leagues??¤Er du sikker p&aring; at du vil slette alle Hold/Puljer??
 Add all of the Clubs Teams and Leagues¤Tilf&oslash;j alle klubbens hold/puljer
@@ -45,7 +45,11 @@ Saturday¤L&oslash;rdag
 Sundag¤S&oslash;ndag
 Refereeplan¤Dommerplan
 Update Game Schedule¤Opdater Kamp Program
-Upcomming Games¤Kommende Kampe
+Upcomming Games¤Kommende kampe
+Unassigned Games¤Utildelte kampe
+Rescheduled Games¤Flyttede kampe
+Cancelled Games¤Aflyste kampe
+All Games (Season)¤Alle sæsonens kampe
 Game number:¤Kampnummer:
 Date:¤Dato:
 Time:¤Tidspunkt:
@@ -64,7 +68,7 @@ or¤eller
 Cancel¤Annuller
 Are you sure you want to delete this game??¤Er du sikker på at du vil slette denne kamp??
 Delete Game??¤Slet Kamp??
-Teams¤Hold
+Club Teams¤Klub hold
 Referees/Coaches¤Dommere/Tr&aelig;nere
 Unavailable League/Team¤Ugyldig r&aelig;kke/hold
 Game with assigned table and referees¤Kamp med p&aring;sat bord/dommere
@@ -89,3 +93,4 @@ Username¤Brugernavn
 Password¤Adgangskode
 Select Club¤V&aelig;lg klub
 Club¤Klub
+No Teams¤Ingen Hold

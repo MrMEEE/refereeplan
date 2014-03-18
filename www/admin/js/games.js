@@ -23,7 +23,19 @@ $(document).ready(function(){
 			}
 		}
 	});
-
+	
+	$('.game .number').on('click',null,function(){
+	      currentGame = $(this).closest('.game');
+	      $.ajax({type: "POST", url: "ajax/refereeplan.ajax.games.php",async:true,dataType: "json",data: {'action':'getGameURL','gameid':currentGame.find('.number').text()} ,success: function(data){
+		  window.open(data[0].url,'_blank');	
+		},error: function(xhr, status, err) {
+		  alert(status + ": " + err);
+		}           
+      		});
+	      //
+	      
+	});
+	
 	// When a double click occurs, just simulate a click on the edit button:
 	$('.game .text').on('dblclick',null,function(){
 

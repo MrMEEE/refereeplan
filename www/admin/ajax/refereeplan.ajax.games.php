@@ -23,24 +23,36 @@ switch($_POST['syncAction']){
 
   break;
   case "getTeams":
-  
-      $calendars = ref_mysql_query("SELECT * FROM `calendars`");
-      $json = '[ ';
+      
+      $currentUser = mysql_fetch_assoc(getCurrentUser());
+      
+      $calendars = ref_mysql_query("SELECT * FROM `calendars` WHERE `clubid`='".$currentUser['clubid']."'");
+      
+      if(mysql_num_rows($calendars) < 1){
 
-      while($cal=mysql_fetch_assoc($calendars)){
+	    $json = '[ { "id": "", "name": "'.fetchText("No Teams").'", "address": "" } ]';
       
-	    $json .= '{ "id": "'.$cal["id"].'", "name": "'.$cal["team"].'", "address": "'.$cal["address"].'" }, ';
-      
+      }else{
+	    
+	    $json = '[ ';
+
+	    while($cal=mysql_fetch_assoc($calendars)){
+	    
+		  $json .= '{ "id": "'.$cal["id"].'", "name": "'.$cal["team"].'", "address": "'.$cal["address"].'" }, ';
+	    
+	    }
+	    
+	    $json = substr_replace($json ,"",-2);
+	    $json .= " ]";
+	    
       }
-      
-      $json = substr_replace($json ,"",-2);
-      $json .= " ]";
       echo $json;
  
   break;
 }
 
 $id = (int)$_POST['id'];
+$currentUser = mysql_fetch_assoc(getCurrentUser());
 
 switch($_POST['action']){
 	case 'delete':
@@ -86,7 +98,7 @@ switch($_POST['action']){
 	
 	case 'getclass':
 		
-		$game = mysql_fetch_assoc(ref_mysql_query("SELECT * FROM `games` WHERE `id`='".$_POST['id']."'"));
+		$game = mysql_fetch_assoc(ref_mysql_query("SELECT * FROM `games` WHERE `gameid`='".$_POST['id']."' AND `clubid`='".$currentUser['clubid']."'"));
 		
 		switch($game['status']){
 		
@@ -114,15 +126,25 @@ switch($_POST['action']){
 	break;
 	
 	case 'acknowledgemove':
-		$game = mysql_fetch_assoc(ref_mysql_query("SELECT * FROM `games` WHERE `id`='".$_POST['id']."'"));
+		$game = mysql_fetch_assoc(ref_mysql_query("SELECT * FROM `games` WHERE `gameid`='".$_POST['id']."' AND `clubid`='".$currentUser['clubid']."'"));
 		
 		if($game['status'] == 2){
-		    ref_mysql_query("UPDATE games SET status='1' WHERE id=".$game['id']);
+		    ref_mysql_query("UPDATE games SET status='1' WHERE gameid=".$game['gameid']." AND `clubid`='".$currentUser['clubid']."'");
 		    $status='1';
 		    if($game['refereeteam1id']!='0' && $game['refereeteam2id']!='0' && $game['tableteam1id']!='0' && $game['tableteam2id']!='0' && $game['tableteam3id']!='0'){
-			  ref_mysql_query("UPDATE games SET status='0' WHERE id = '".$game['id']."'");
+			  ref_mysql_query("UPDATE games SET status='0' WHERE gameid = '".$game['gameid']."' AND `clubid`='".$currentUser['clubid']."'");
 		    }
 		}
+	break;
+	
+	case "getGameURL":
+  
+	      $url = getGameURL($_POST['gameid']);
+	
+	      $json = '[ { "url": "'.$url.'" } ]';
+	      
+	      echo $json;
+    
 	break;
 	
 }

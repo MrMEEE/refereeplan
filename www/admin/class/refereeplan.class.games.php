@@ -12,12 +12,14 @@ class gameObj{
 
       public function __toString(){
 	    
+	    $currentUser = mysql_fetch_assoc(getCurrentUser());
+	    
 	    $teamlists["refereeteam1"] = " ";
 	    $teamlists["refereeteam2"] = " ";
 	    $teamlists["tableteam1"] = " ";
 	    $teamlists["tableteam2"] = " ";
 	    $teamlists["tableteam3"] = " ";
-	    $result = ref_mysql_query("SELECT id, name FROM teams ORDER BY name ASC");
+	    $result = ref_mysql_query("SELECT id, name FROM teams WHERE `clubid`='".$currentUser['clubid']."' ORDER BY name ASC");
 	    
 	    while(list($id, $name)=mysql_fetch_row($result)) {
 		  foreach ($teamlists as $key => $value){
@@ -39,26 +41,26 @@ class gameObj{
 
 		if($this->data['refereeteam1id']=='0' || $this->data['refereeteam2id']=='0' || $this->data['tableteam1id']=='0' || $this->data['tableteam2id']=='0' || $this->data['tableteam3id']=='0'){
 		    if($this->data['status'] != '1'){
-			ref_mysql_query("UPDATE games SET status='1' WHERE id = '".$this->data['id']."'");
+			ref_mysql_query("UPDATE games SET status='1' WHERE gameid = '".$this->data['gameid']."'");
 			$this->data['status']='1';
 		    }
 		}
 		
 		switch($this->data['status']){
 		case 0:  // OK
-		    $return.= '<li id="game-'.$this->data['id'].'" class="game ok">';
+		    $return.= '<li id="game-'.$this->data['gameid'].'" class="game ok">';
 		    break;
 		case 1:  // New
-		    $return.= '<li id="game-'.$this->data['id'].'" class="game new">';
+		    $return.= '<li id="game-'.$this->data['gameid'].'" class="game new">';
 		      break;
 		case 2:  // Changed
-		    $return.= '<li id="game-'.$this->data['id'].'" class="game changed">';
+		    $return.= '<li id="game-'.$this->data['gameid'].'" class="game changed">';
 		    break;
 		case 3:
-		    $return.= '<li id="game-'.$this->data['id'].'" class="game cancelled">';
+		    $return.= '<li id="game-'.$this->data['gameid'].'" class="game cancelled">';
 		    break;
 		case 4:
-		    $return.= '<li id="game-'.$this->data['id'].'" class="game moved">';
+		    $return.= '<li id="game-'.$this->data['gameid'].'" class="game moved">';
 		    break;
 		}
 
@@ -141,7 +143,7 @@ class gameObj{
 		
 		$return .= '<table class="gameinfo">
 			      <tr>
-			      <td class="id-title">'.fetchText("Game number:").' <div class="number"><a href="gotoGame.php?gameID='.$this->data['id'].'"target="_blank">'.$this->data['id'].'</a></div></td>
+			      <td class="id-title">'.fetchText("Game number:").' <div class="number">'.$this->data['gameid'].'</div></td>
 			      <td class="time-title">'.fetchText("Time:").' <div class="time">'.$this->data['time'].'</div></td>
 			      <td class="date-title">'.fetchText("Date:").' <div class="date">'.$day.', '.$date.'</div></td>
 			      <td class="place-title">'.fetchText("Place:").' <div class="place">'.$this->data['place'].'</div></td>
@@ -152,7 +154,7 @@ class gameObj{
 			      <td>'.$acknowledge.'</td>
 			      </tr>
 			    </table>
-			    <table id="dutiesinfo-'.$this->data['id'].'" class="dutiesinfo" hidden="true">
+			    <table id="dutiesinfo-'.$this->data['gameid'].'" class="dutiesinfo" hidden="true">
 			    <div class="actions">
 			      <tr>
 			       <td width="25%">
@@ -233,6 +235,9 @@ class gameObj{
 	}
 	
 	public static function changeTeam($id, $team, $teamlist){
+	
+		$currentUser = mysql_fetch_assoc(getCurrentUser());
+		
 		switch($teamlist){
 			case '1':
 				$idlist="refereeteam1id";
@@ -252,16 +257,16 @@ class gameObj{
 		}
 		$team = self::esc($team);
 		if(!$team) throw new Exception("Wrong update text!");
-		$game=mysql_fetch_assoc(ref_mysql_query("SELECT * FROM games WHERE id = '$id'"));
+		$game=mysql_fetch_assoc(ref_mysql_query("SELECT * FROM games WHERE gameid = '$id' AND `clubid`='".$currentUser['clubid']."'"));
 		$status=$game['status'];
-		ref_mysql_query("UPDATE games SET $idlist='".$team."' WHERE id=".$id);
+		ref_mysql_query("UPDATE games SET $idlist='".$team."' WHERE gameid=".$id." AND `clubid`='".$currentUser['clubid']."'");
 		if($status=='2'){
-		    ref_mysql_query("UPDATE games SET status='1' WHERE id=".$id);
+		    ref_mysql_query("UPDATE games SET status='1' WHERE gameid=".$id." AND `clubid`='".$currentUser['clubid']."'");
 		    $status='1';
 		}
 		
 		if($status=='1' && $game['refereeteam1id']!='0' && $game['refereeteam2id']!='0' && $game['tableteam1id']!='0' && $game['tableteam2id']!='0' && $game['tableteam3id']!='0'){
-		    ref_mysql_query("UPDATE games SET status='0' WHERE id = '".$game['id']."'");
+		    ref_mysql_query("UPDATE games SET status='0' WHERE gameid = '".$game['gameid']."' AND `clubid`='".$currentUser['clubid']."'");
 		}
 	
 		if(mysql_affected_rows($GLOBALS['link'])!=1)
@@ -269,11 +274,14 @@ class gameObj{
 	}
 		
 	public static function edit($id, $text, $type){
+	
+		$currentUser = mysql_fetch_assoc(getCurrentUser());
+		
 		echo '<script language="javascript">confirm("'.$text.'")</script>;';
 		$text = self::esc($text);
 		if(!$text) throw new Exception("Wrong update text!");
 		
-		ref_mysql_query("UPDATE games SET $type='".$text."' WHERE id=".$id);
+		ref_mysql_query("UPDATE games SET $type='".$text."' WHERE gameid=".$id." AND `clubid`='".$currentUser['clubid']."'");
 		
 		if(mysql_affected_rows($GLOBALS['link'])!=1)
 			throw new Exception("Couldn't update item!");
@@ -281,8 +289,10 @@ class gameObj{
 
 	
 	public static function delete($id){
+	
+		$currentUser = mysql_fetch_assoc(getCurrentUser());
 		
-		ref_mysql_query("DELETE FROM games WHERE id=".$id);
+		ref_mysql_query("DELETE FROM games WHERE gameid=".$id." AND `clubid`='".$currentUser['clubid']."'");
 		
 		if(mysql_affected_rows($GLOBALS['link'])!=1)
 			throw new Exception("Couldn't delete item!");
@@ -290,11 +300,13 @@ class gameObj{
 	
 		
 	public static function createNew($text){
+	
+		$currentUser = mysql_fetch_assoc(getCurrentUser());
 		
 		$text = self::esc($text);
 		if(!$text) throw new Exception("Wrong input data!");
 		
-		$posResult = ref_mysql_query("SELECT MAX(position)+1 FROM games");
+		$posResult = ref_mysql_query("SELECT MAX(position)+1 FROM games WHERE `clubid`='".$currentUser['clubid']."'");
 		
 		if(mysql_num_rows($posResult))
 			list($position) = mysql_fetch_array($posResult);
@@ -302,7 +314,7 @@ class gameObj{
 		//if(!$position) 
 		$position = 1;
 
-		ref_mysql_query("INSERT INTO games SET text='".$text."',time='00:00:00',position = ".$position);
+		ref_mysql_query("INSERT INTO games SET text='".$text."',time='00:00:00',position = ".$position.",`clubid`='".$currentUser['clubid']."'");
 
 		if(mysql_affected_rows($GLOBALS['link'])!=1)
 			throw new Exception("Error inserting Game!");

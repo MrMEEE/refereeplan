@@ -18,7 +18,9 @@ switch($_POST['action']){
   
   case "createTeam":
   
-	ref_mysql_query("INSERT INTO `teams` (`name`,`contactid`) VALUES ('".$_POST['name']."','".$_POST['contactid']."')");
+	$currentUser = mysql_fetch_assoc(getCurrentUser());
+  
+	ref_mysql_query("INSERT INTO `teams` (`name`,`contactid`,`clubid`) VALUES ('".$_POST['name']."','".$_POST['contactid']."','".$currentUser['clubid']."')");
   
   break;
   
