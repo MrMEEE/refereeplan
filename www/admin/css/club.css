@@ -36,3 +36,19 @@
 #newTeamPlaceHolder{
   height: 110px  !important;
 }
+
+.teamListElement{
+  list-style-type: none;
+}
+
+.deleteTeam{
+  width: 15px;
+  padding-right:3px;
+  padding-left:3px;
+}
+
+.editTeam{
+  width: 15px;
+  padding-right:3px;
+  padding-left:3px;
+}

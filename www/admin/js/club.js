@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	 
+    
 	// Configuring the delete confirmation dialog
 	
 	var dialog_buttons = {}; 
@@ -38,9 +38,24 @@ $(document).ready(function(){
 	
 	$('.teamCreate').click(function(event){
 		event.preventDefault();
-		$('#newTeamName').val("");
+		alert("Test");
+		$('#content ul').append(
+		  $('<li>').append(
+		    $('<a>').attr('href','/user/messages').append(
+		      $('<span>').attr('class', 'tab').append("Message center")
+		)));
+		/*$('#newTeamName').val("");
 		$('#newTeamContactId').val(0);
-		$("#newTeamPlaceHolder").dialog('open');
+		$("#newTeamPlaceHolder").dialog('open');*/
+	});
+	
+	$('.editTeam').click(function(event){
+	    alert($(this).closest('.teamListElement').attr('id'));
+	});
+	
+	$('.deleteTeam').click(function(event){
+	    alert($(this).closest('.teamListElement').attr('id'));
+	  
 	});
 	
 });

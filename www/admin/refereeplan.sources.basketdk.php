@@ -431,15 +431,15 @@ function syncTeam($teamid,$teamurl){
 	    $courts = array_merge(getCourts($clubids[$i]),$courts);
 	}
 	
-	if(!mysql_num_rows(ref_mysql_query("SELECT * FROM teams WHERE name = 'DBBF' AND `clubid`=".$currentUser['clubid'].""))){
-	    ref_mysql_query("INSERT INTO teams SET name='DBBF',`clubid`=".$currentUser['clubid']."");
+	if(!mysql_num_rows(ref_mysql_query("SELECT * FROM teams WHERE name = 'DBBF' AND `clubid`='-1'"))){
+	    ref_mysql_query("INSERT INTO teams SET name='DBBF',`clubid`='-1'");
 	}
 	
-	if(!mysql_num_rows(ref_mysql_query("SELECT * FROM teams WHERE name = '-' AND `clubid`=".$currentUser['clubid'].""))){
-	    ref_mysql_query("INSERT INTO teams SET name='-',`clubid`=".$currentUser['clubid']."");
+	if(!mysql_num_rows(ref_mysql_query("SELECT * FROM teams WHERE name = '-' AND `clubid`='-1'"))){
+	    ref_mysql_query("INSERT INTO teams SET name='-',`clubid`='-1'");
 	}
 	
-	$dbbfentry=mysql_fetch_assoc(ref_mysql_query("SELECT * FROM teams WHERE name = 'DBBF' AND `clubid`=".$currentUser['clubid'].""));
+	$dbbfentry=mysql_fetch_assoc(ref_mysql_query("SELECT * FROM teams WHERE name = 'DBBF' AND `clubid`='-1'"));
 	$dbbfid=$dbbfentry['id'];
 	
 	$dom = new DOMDocument();  
@@ -604,7 +604,7 @@ function syncTeam($teamid,$teamurl){
 				if($status!=6){
 					$status=1;
 				}
-				ref_mysql_query("INSERT INTO games (`gameid`, `text`, `date`, `time`, `status`, `tableteam3id`, `place`, `homegame`,`team`,`grandprix`,`clubid`,`result`,`referee1name`,`referee2name`) VALUES ('$id', '$text', '$date', '$time','$status',9999,'$place','$athome','$teamid','$grandprix','".$currentUser['clubid']."','".$result."','".$ref1."','".$ref2."')");
+				ref_mysql_query("INSERT INTO games (`gameid`, `text`, `date`, `time`, `status`, `tableteam3id`, `place`, `homegame`,`team`,`grandprix`,`clubid`,`result`,`referee1name`,`referee2name`) VALUES ('$id', '$text', '$date', '$time','$status',0,'$place','$athome','$teamid','$grandprix','".$currentUser['clubid']."','".$result."','".$ref1."','".$ref2."')");
 				if($athome){
 					$returns[] = fetchText("Adding Homegame: ").$id;
 				}else{
@@ -622,6 +622,17 @@ function syncTeam($teamid,$teamurl){
 	}
 	}
 	return $returns;
+
+}
+
+function getHiddenTeams(){
+
+      $teamArray = array(
+	    "-",
+	    "DBBF"
+      );
+      
+      return $teamArray;
 
 }
 

@@ -19,7 +19,7 @@ class gameObj{
 	    $teamlists["tableteam1"] = " ";
 	    $teamlists["tableteam2"] = " ";
 	    $teamlists["tableteam3"] = " ";
-	    $result = ref_mysql_query("SELECT id, name FROM teams WHERE `clubid`='".$currentUser['clubid']."' ORDER BY name ASC");
+	    $result = ref_mysql_query("SELECT id, name FROM teams WHERE (`clubid`='".$currentUser['clubid']."' OR `clubid`='-1') ORDER BY name ASC");
 	    
 	    while(list($id, $name)=mysql_fetch_row($result)) {
 		  foreach ($teamlists as $key => $value){
@@ -39,12 +39,12 @@ class gameObj{
                 $date.=substr($this->data['date'],0,4);
 		$return = "";
 
-		if($this->data['refereeteam1id']=='0' || $this->data['refereeteam2id']=='0' || $this->data['tableteam1id']=='0' || $this->data['tableteam2id']=='0' || $this->data['tableteam3id']=='0'){
+		/*if($this->data['refereeteam1id']!='0' || $this->data['refereeteam2id']=='0' || $this->data['tableteam1id']=='0' || $this->data['tableteam2id']=='0' || $this->data['tableteam3id']=='0'){
 		    if($this->data['status'] != '1'){
 			ref_mysql_query("UPDATE games SET status='1' WHERE gameid = '".$this->data['gameid']."'");
 			$this->data['status']='1';
 		    }
-		}
+		}*/
 		
 		switch($this->data['status']){
 		case 0:  // OK
@@ -265,6 +265,7 @@ class gameObj{
 		    $status='1';
 		}
 		
+		$game=mysql_fetch_assoc(ref_mysql_query("SELECT * FROM games WHERE gameid = '$id' AND `clubid`='".$currentUser['clubid']."'"));
 		if($status=='1' && $game['refereeteam1id']!='0' && $game['refereeteam2id']!='0' && $game['tableteam1id']!='0' && $game['tableteam2id']!='0' && $game['tableteam3id']!='0'){
 		    ref_mysql_query("UPDATE games SET status='0' WHERE gameid = '".$game['gameid']."' AND `clubid`='".$currentUser['clubid']."'");
 		}

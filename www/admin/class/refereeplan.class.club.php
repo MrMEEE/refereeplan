@@ -11,7 +11,17 @@ class teamObj{
       }
       
       public function __toString(){
-      
+	    
+	    $return .= '<li id="team-'.$this->data['id'].'" class="teamListElement">';
+	    
+	    $return .= '<img class="deleteTeam" width="15px" src="img/remove.png">';
+	    $return .= '<img class="editTeam" width="15px" src="img/edit.png">';
+	    
+	    $return .= " ".$this->data['name'];
+	    
+	    $return .= '</li>';
+	    
+	    return $return;
       
       }
 
