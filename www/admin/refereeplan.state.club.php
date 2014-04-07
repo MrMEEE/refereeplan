@@ -70,6 +70,20 @@ case "clubteams":
 
   echo '<script type="text/javascript" src="js/club.js"></script>';
   echo '<link rel="stylesheet" type="text/css" href="css/club.css">';
+  echo '<div id="removeTeamPlaceHolder" title="'.fetchText("Remove Team??").'">'.fetchText("Are you sure you want to delete this team??").'<div id="removeTeamId"></div></div>';
+  echo '<div id="editTeamPlaceHolder" title="'.fetchText("Edit Team").'">
+	  <div id="editTeamNameHolder">'.fetchText("Team Name:").'</div><input id="editTeamName">
+	  <div id="editTeamContactHolder">'.fetchText("Contact:").'</div>
+	  <div id="editTeamId"></div>
+	  <input type="hidden" id="editOrigTeamName">
+	  <select id="editTeamContactId">
+	    <option value="0">'.fetchText("No Contact").'</option>';
+	    $query = ref_mysql_query("SELECT * FROM `users` WHERE `clubid`='".$currentUser['clubid']."' ORDER BY `name` ASC");
+	    while($user = mysql_fetch_assoc($query)){
+		echo '<option value="'.$user["id"].'">'.$user["name"].'</option>';
+	    }
+	  echo '<select>
+	  <div id="editTeamMessageHolder"></div></div></div>';
   
   echo fetchText("Club Teams","header2");
   echo '<div id="newTeamPlaceHolder" title="'.fetchText("New Team").'">
@@ -95,14 +109,7 @@ case "clubteams":
 	    $teams[] = new teamObj($row);
       
       }
-      
-    /*if($row['name']!="-"){
-	echo $row['name'];
-	echo ' - <a href="javascript:teamsChangeUser('.$row['id'].',\''.$row['name'].'\')">'.fetchText("Change Contact").'</a>';
-	echo ' - <a href="javascript:teamsChangeName('.$row['id'].',\''.$row['name'].'\')">'.fetchText("Change Name").'</a>';
-	echo ' - <a href="javascript:teamsRemove('.$row['id'].')">Fjern</a>';	
-	echo "<br>";
-    }*/
+
    }
    
    echo '<ul class="teamList">';

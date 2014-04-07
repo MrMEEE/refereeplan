@@ -17,7 +17,7 @@ class teamObj{
 	    $return .= '<img class="deleteTeam" width="15px" src="img/remove.png">';
 	    $return .= '<img class="editTeam" width="15px" src="img/edit.png">';
 	    
-	    $return .= " ".$this->data['name'];
+	    $return .= ' <span id="teamName-'.$this->data['id'].'">'.$this->data['name']."</span>";
 	    
 	    $return .= '</li>';
 	    

@@ -94,3 +94,8 @@ Password¤Adgangskode
 Select Club¤V&aelig;lg klub
 Club¤Klub
 No Teams¤Ingen Hold
+Clubs¤Klubber
+Remove Team??¤Slet hold??
+Are you sure you want to delete this team??¤Er du sikker på at du vil slette dette hold??
+Remove Team¤Slet hold
+Edit Team¤Rediger hold
