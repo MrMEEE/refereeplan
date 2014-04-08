@@ -19,10 +19,7 @@ case "configuration":
 	$clublist.= "<option value=\"".$ids[$k].":".fixCharacters($clubs[$k])."\">".fixCharacters($clubs[$k])."</option>";
   }
 
-  $javascript .= 'function showUpdated(){
-			$("#message").text("'.fetchText("Settings were updated").'").show().fadeOut(2000);
-		}
-		function addSisterClubs(select){
+  $javascript .= 'function addSisterClubs(select){
 			var id = Math.floor( Math.random()*99999 );
 			$("#sisterClubs").append(\'<select id="sisterClub-\'+id+\'" name="clubselect[]" onchange="javascript:changeClubs()">'.addslashes($clublist).'</select>\');
 			$("#sisterClub-"+id+\' option[value^="\'+select+\':"]\').attr("selected", true);
@@ -97,13 +94,6 @@ case "configuration":
 		  
 		  }
 		  
-		  function changeGameSource(){
-			document.mainForm.changeSource.value=$("#sourceSelector :selected").text();
-			$.post("ajax/refereeplan.ajax.administration.php", $("#mainForm").serialize());
-			document.mainForm.changeSource.value="";
-			showUpdated();
-		  }
-		  
 		  function changeLanguage(){
 			document.mainForm.changeLanguageSource.value=$("#languageSelector :selected").text();
 			$.post("ajax/refereeplan.ajax.administration.php", $("#mainForm").serialize());
@@ -137,35 +127,10 @@ case "configuration":
       }
   }
   
-
-  
-  echo '<table width="100%">
-	  <tr>
-	    <td width="50%">';
-  
-  echo fetchText("Select Club:","header3");
-  
-  echo '</td>
-	<td width="50%" align="right">';
-	
-  echo '<div id="message"></div>';
-  
-  echo '</td>
-	</tr>
-	</table>';
-  
-  echo '<select name="clubselect[]" onchange="changeClubs();">'.
-          $clublist
-        .'</select>';
-  
   echo fetchText("Sister Clubs:","header3");
   
   echo '<div id="sisterClubs"></div>';
   echo '<br><a href="#" onclick="javascript:addSisterClubs(0);"><img width="15px" src="img/add.png">'.fetchText("Add Sister Club").'</a><br>';
-  
-  echo fetchText("URL for Updates:","header3");
-  
-  echo '<input type="text" onchange="javascript:changeUpdatesUrl();" name="updatesUrl" value="'.$config['updatesurl'].'">';
   
   echo '<input type="hidden" name="changeClub">
 	<input type="hidden" name="changeSource">
@@ -188,21 +153,7 @@ case "configuration":
   echo '</select><br>';
   echo '<input type="button" onclick="javascript:addGym();" value="'.fetchText("Add").'"><br><br>';
   
-  echo fetchText("Game Source:","header3");
   
-  echo '<select id="sourceSelector" onchange="javascript:changeGameSource();">';
-  foreach(glob("refereeplan.sources.*.php") as $source){
-     $sourcename = explode(".",$source);
-     if($sourcename[2] == $config['gamesource']){
-	  $selected = "selected";
-     }else{
-	  $selected = "";
-     }
-     echo '<option value="'.$sourcename[2].'" '.$selected.'>'.$sourcename[2].'</option>'; 
-  }	
-  echo '</select><br><br>';
-  echo getSourceInfo();
-  echo '<br><br>';
   
   echo fetchText("Language:","header3");
   

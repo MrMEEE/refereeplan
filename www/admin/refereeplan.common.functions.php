@@ -142,15 +142,25 @@ function showContent($state){
 }
 
 function getConfiguration(){
+  
+  $currentUser = mysql_fetch_assoc(getCurrentUser());
 
-  $configs = ref_mysql_query("SELECT `name`,`value` FROM `config`");
+  $config = mysql_fetch_array(ref_mysql_query("SELECT * FROM `config` WHERE `id`='".$currentUser['clubid']."'"));
+  
+  foreach($config as $key=>$value){
+  
+    $configarray[$key] = $value ;
+    
+  }
+  
+  $configs = ref_mysql_query("SELECT `name`,`value` FROM `commonconfig`");
   
   while($config = mysql_fetch_assoc($configs)){
   
     $configarray[$config["name"]] = $config["value"] ;
-    
+  
   }
-
+  
   return $configarray;
   
 }

@@ -9,7 +9,7 @@
   
   if($_POST["changeSource"] != ""){
   
-    ref_mysql_query("UPDATE `config` SET `value`='".$_POST['changeSource']."' WHERE `name`='gamesource'");
+    ref_mysql_query("UPDATE `commonconfig` SET `value`='".$_POST['changeSource']."' WHERE `name`='gamesource'");
   
   }
   

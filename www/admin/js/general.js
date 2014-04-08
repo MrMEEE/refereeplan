@@ -40,3 +40,7 @@ function fetchText(string){
       return newtext;
   
 }
+
+function showUpdated(){
+	$("#message").text(fetchText("Settings were updated")).show().fadeOut(2000);
+}
