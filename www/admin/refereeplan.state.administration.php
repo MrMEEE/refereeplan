@@ -112,7 +112,18 @@ case "configuration":
 		  });
 		  ';
   
+  echo '<table width="100%">
+	  <tr>
+	    <td width="50%">';
   echo fetchText("Configuration","header2");
+  echo '</td>
+	<td width="50%" align="right">';
+
+  echo '<div id="message"></div>';
+  
+  echo '</td>
+	</tr>
+	</table>';
   
   if($clubids[0] == ""){
       $clublist.= "<option value=\":\" selected>".fetchText("No Club selected.")."</option>";

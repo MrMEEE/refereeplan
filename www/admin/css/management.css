@@ -1,3 +1,12 @@
 .clubListElement{
   list-style-type: none;
 }
+
+#editDialogPlaceHolder{
+  height: 110px  !important;
+}
+.editDialog{
+  width: 15px;
+  padding-right:3px;
+  padding-left:3px;
+}

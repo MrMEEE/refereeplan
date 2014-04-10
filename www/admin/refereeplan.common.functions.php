@@ -101,7 +101,7 @@ function showContent($state){
 		'.fetchText("Club").'<br><select name="clubSelect" class="clubSelect" id="clubSelect">
 		<option value="0">'.fetchText("Select Club").'</option>';
 	  
-	  $clubs = ref_mysql_query("SELECT * FROM `clubs`");
+	  $clubs = ref_mysql_query("SELECT * FROM `config`");
 	  
 	  while($club = mysql_fetch_assoc($clubs)){
 	    

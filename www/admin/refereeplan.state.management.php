@@ -4,6 +4,11 @@ case "managementclubs":
 
   echo '<script type="text/javascript" src="js/management.js"></script>';
   echo '<link rel="stylesheet" type="text/css" href="css/management.css">';
+  
+   echo '<div id="editClubPlaceHolder" title="'.fetchText("Edit Club").'">
+	  <div id="editClubNameHolder"></div>
+	  <input type="hidden" id="editClubId">
+	  <div id="editClubMessageHolder"></div></div></div>';
 
   require("class/refereeplan.class.management.php");
 
@@ -39,11 +44,21 @@ case "managementconfig":
 
   echo '<script type="text/javascript" src="js/management.js"></script>';
   echo '<link rel="stylesheet" type="text/css" href="css/management.css">';
-
+  
+  echo '<table width="100%">
+	  <tr>
+	    <td width="50%">';
   echo fetchText("Configuration","header2");
+  echo '</td>
+	<td width="50%" align="right">';
+
+  echo '<div id="message"></div>';
+  
+  echo '</td>
+	</tr>
+	</table>';
   
   echo fetchText("Game Source:","header3");
-  
   echo '<select id="sourceSelector" onchange="javascript:changeGameSource();">';
   foreach(glob("refereeplan.sources.*.php") as $source){
      $sourcename = explode(".",$source);
