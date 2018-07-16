@@ -18,7 +18,7 @@ switch($_POST['action']){
     
     case "logon":
     
-	  if(mysql_num_rows(getCurrentUser("POST")) > 0){
+	  if(mysqli_num_rows(getCurrentUser("POST")) > 0){
 		$status = "0";
 		session_start();
 		$_SESSION['rpusername']=$_POST['username'];
@@ -29,7 +29,7 @@ switch($_POST['action']){
 		$status = "1";
 	  }
 	  
-	  mysql_query("INSERT INTO `logons` (`username`,`passwdhash`,`time`,`status`,`clubid`) VALUES ('".$_POST['username']."','".$_POST['password']."',NOW(),'".$status."','".$_POST['club']."')");
+	  mysqli_query($GLOBALS['link'],"INSERT INTO `logons` (`username`,`passwdhash`,`time`,`status`,`clubid`) VALUES ('".$_POST['username']."','".$_POST['password']."',NOW(),'".$status."','".$_POST['club']."')");
 	  	  
 	  $json = '[ { "status": "'.$status.'" } ]';
 	  

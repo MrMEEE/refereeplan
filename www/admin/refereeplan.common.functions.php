@@ -64,11 +64,11 @@ function showNavigation(){
 
 function showNavigationChildren($parent){
   
-  if(mysql_num_rows(getCurrentUser()) > 0){
+  if(mysqli_num_rows(getCurrentUser()) > 0){
 
-    $mysql_select_children = "SELECT * FROM `navigation` WHERE `parent`='".$parent."' ORDER BY `order`,`id`";
-    $query = ref_mysql_query($mysql_select_children);
-    while ($child = mysql_fetch_array($query)) {
+    $mysqli_select_children = "SELECT * FROM `navigation` WHERE `parent`='".$parent."' ORDER BY `order`,`id`";
+    $query = ref_mysql_query($mysqli_select_children);
+    while ($child = mysqli_fetch_array($GLOBALS['link'],$query)) {
 	if($child["disabled"]){
 	echo '<li><a href="#">'.fetchText($child["title"]).'</a>
 		<ul>';
@@ -93,7 +93,7 @@ function showContent($state){
           <tr>
             <td>';
   
-  if(mysql_num_rows(getCurrentUser()) == 0){
+  if(mysqli_num_rows(getCurrentUser()) == 0){
 	  session_start();
 	  echo fetchText("Please log in.","header2");
 	  echo '<center>'.fetchText("Username").'<br><input name="username" class="username" type="text" id="username"><br><br>
@@ -103,7 +103,7 @@ function showContent($state){
 	  
 	  $clubs = ref_mysql_query("SELECT * FROM `config`");
 	  
-	  while($club = mysql_fetch_assoc($clubs)){
+	  while($club = mysqli_fetch_assoc($GLOBALS['link'],$clubs)){
 	    
 	     echo '<option value="'.$club["id"].'">'.$club["name"].'</option>';
 	  
@@ -143,9 +143,9 @@ function showContent($state){
 
 function getConfiguration(){
   
-  $currentUser = mysql_fetch_assoc(getCurrentUser());
+  $currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
 
-  $config = mysql_fetch_array(ref_mysql_query("SELECT * FROM `config` WHERE `id`='".$currentUser['clubid']."'"));
+  $config = mysqli_fetch_array($GLOBALS['link'],ref_mysql_query("SELECT * FROM `config` WHERE `id`='".$currentUser['clubid']."'"));
   
   foreach($config as $key=>$value){
   
@@ -155,7 +155,7 @@ function getConfiguration(){
   
   $configs = ref_mysql_query("SELECT `name`,`value` FROM `commonconfig`");
   
-  while($config = mysql_fetch_assoc($configs)){
+  while($config = mysqli_fetch_assoc($GLOBALS['link'],$configs)){
   
     $configarray[$config["name"]] = $config["value"] ;
   
@@ -298,17 +298,29 @@ function getCurrentUser($scope="SESSION"){
       $username = stripslashes($_POST['username']);
       $password = stripslashes($_POST['password']);
       $club = stripslashes($_POST['club']);
+      error_log("POST!!!!!!!!!!!!!!!!!");
+      #$username = $_POST['username'];
+      #$password = $_POST['password'];
+      #$club = $_POST['club'];
   }else{
       session_start();
       $username = stripslashes($_SESSION['rpusername']);
       $password = stripslashes($_SESSION['rppasswd']);
       $club = stripslashes($_SESSION['rpclubid']);
+      error_log("SESSION!!!!!!!!!!!!!!!!!");
   }
-  $username = mysql_real_escape_string($username);
-  $password = mysql_real_escape_string($password);
-  $club = mysql_real_escape_string($club);
+  error_log("Test".$username.",".$password.",".$_POST['username'].",".$_POST['password']);
+  $username = mysqli_real_escape_string($GLOBALS['link'],$username);
+  $password = mysqli_real_escape_string($GLOBALS['link'],$password);
+  $club = mysqli_real_escape_string($GLOBALS['link'],$club);
+
+  #error_log($username,$password);
+
+  error_log("SELECT * FROM `users` WHERE `username`='".$username."' AND `passwd`='".$password."'");
   
   $currentuser = ref_mysql_query("SELECT * FROM `users` WHERE `username`='".$username."' AND `passwd`='".$password."' AND `clubid`='".$club."'");
+
+  error_log("!!!!!!!!!!!!!!!!!!".mysqli_num_rows($currentuser));
   
   return $currentuser;
 
@@ -331,13 +343,13 @@ function ref_mysql_query($query){
       
       $parameters = str_replace("`","",str_replace("'","",implode(' ',array_slice($rest_array, 1))));
       
-      $user = mysql_fetch_assoc(getCurrentUser());
+      $user = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
             
-      mysql_query("INSERT INTO `log` (`time`,`action`,`parameters`,`table`,`userid`) VALUES (NOW(),'".$action."','".$parameters."','".$table."','".$user['id']."')");
+      mysqli_query($GLOBALS['link'],"INSERT INTO `log` (`time`,`action`,`parameters`,`tablename`,`userid`) VALUES (NOW(),'".$action."','".$parameters."','".$table."','".$user['id']."')");
   
   }
   
-  return mysql_query($query);
+  return mysqli_query($GLOBALS['link'],$query);
 
 }
 

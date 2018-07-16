@@ -1,7 +1,7 @@
 <?php 
 case "clubteamsexternal":
 
-  $currentUser = mysql_fetch_assoc(getCurrentUser());
+  $currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
 
   echo '<script type="text/javascript" src="js/club.js"></script>';
   
@@ -45,7 +45,7 @@ case "clubteamsexternal":
   
   echo fetchText("Teams:","header3");
   
-  while($row = mysql_fetch_assoc($query)){
+  while($row = mysqli_fetch_assoc($GLOBALS['link'],$query)){
     echo '<a href="';
     echo $row['address'];
     echo '">';
@@ -66,7 +66,7 @@ case "clubteams":
 
   require("class/refereeplan.class.club.php");
   
-  $currentUser = mysql_fetch_assoc(getCurrentUser());
+  $currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
 
   echo '<script type="text/javascript" src="js/club.js"></script>';
   echo '<link rel="stylesheet" type="text/css" href="css/club.css">';
@@ -79,7 +79,7 @@ case "clubteams":
 	  <select id="editTeamContactId">
 	    <option value="0">'.fetchText("No Contact").'</option>';
 	    $query = ref_mysql_query("SELECT * FROM `users` WHERE `clubid`='".$currentUser['clubid']."' ORDER BY `name` ASC");
-	    while($user = mysql_fetch_assoc($query)){
+	    while($user = mysqli_fetch_assoc($GLOBALS['link'],$query)){
 		echo '<option value="'.$user["id"].'">'.$user["name"].'</option>';
 	    }
 	  echo '<select>
@@ -92,7 +92,7 @@ case "clubteams":
 	  <select id="newTeamContactId">
 	    <option value="0">'.fetchText("No Contact").'</option>';
 	    $query = ref_mysql_query("SELECT * FROM `users` WHERE `clubid`='".$currentUser['clubid']."' ORDER BY `name` ASC");
-	    while($user = mysql_fetch_assoc($query)){
+	    while($user = mysqli_fetch_assoc($GLOBALS['link'],$query)){
 		echo '<option value="'.$user["id"].'">'.$user["name"].'</option>';
 	    }
 	  echo '<select>
@@ -102,7 +102,7 @@ case "clubteams":
   
   $query = ref_mysql_query("SELECT * FROM `teams` WHERE (`clubid`='".$currentUser['clubid']."' OR `clubid`='-1') ORDER BY `name` ASC");
   
-  while($row = mysql_fetch_assoc($query)){
+  while($row = mysqli_fetch_assoc($GLOBALS['link'],$query)){
       
       if(!in_array($row['name'],getHiddenTeams())){
       

@@ -1,4 +1,5 @@
 <?php 
+
 case "refereeplanupdate":
     
     echo '<script type="text/javascript" src="js/games.js"></script>';
@@ -30,7 +31,7 @@ case "refereeplanseason":
     require("class/refereeplan.class.games.php");
     require("refereeplan.common.games.functions.php");
     
-    $currentUser = mysql_fetch_assoc(getCurrentUser());
+    $currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
     
     echo showGamesCommon();
     
@@ -44,26 +45,26 @@ case "refereeplanseason":
 	  
 	  case "refereeplanunassigned":
 	      echo fetchText("Unassigned Games","header2");
-	      $query = mysql_query("SELECT * FROM `games` WHERE CURDATE() <= `date` AND `status` = 1 AND `homegame`= 1 AND `clubid`='".$currentUser['clubid']."' ORDER BY `date`,`time` ASC");
-	      $query2 = mysql_query("SELECT * FROM `games` WHERE `date` = '0000-00-00' AND `status` = 1 AND `homegame`= 1 AND `clubid`='".$currentUser['clubid']."' ORDER BY `date`,`time` ASC");
+	      $query = mysqli_query($GLOBALS['link'],"SELECT * FROM `games` WHERE CURDATE() <= `date` AND `status` = 1 AND `homegame`= 1 AND `clubid`='".$currentUser['clubid']."' ORDER BY `date`,`time` ASC");
+	      $query2 = mysqli_query($GLOBALS['link'],"SELECT * FROM `games` WHERE `date` = '0000-00-00' AND `status` = 1 AND `homegame`= 1 AND `clubid`='".$currentUser['clubid']."' ORDER BY `date`,`time` ASC");
 	  break;
 	  
 	  case "refereeplanrescheduled":
 	      echo fetchText("Rescheduled Games","header2");
-	      $query = mysql_query("SELECT * FROM `games` WHERE CURDATE() <= `date` AND `status` = 2 AND `homegame`= 1 AND `clubid`='".$currentUser['clubid']."' ORDER BY `date`,`time` ASC");
-	      $query2 = mysql_query("SELECT * FROM `games` WHERE `date` = '0000-00-00' AND `status` = 2 AND `homegame`= 1 AND `clubid`='".$currentUser['clubid']."' ORDER BY `date`,`time` ASC");
+	      $query = mysqli_query($GLOBALS['link'],"SELECT * FROM `games` WHERE CURDATE() <= `date` AND `status` = 2 AND `homegame`= 1 AND `clubid`='".$currentUser['clubid']."' ORDER BY `date`,`time` ASC");
+	      $query2 = mysqli_query($GLOBALS['link'],"SELECT * FROM `games` WHERE `date` = '0000-00-00' AND `status` = 2 AND `homegame`= 1 AND `clubid`='".$currentUser['clubid']."' ORDER BY `date`,`time` ASC");
 	  break;
 	  
 	  case "refereeplancancelled":
 	      echo fetchText("Cancelled Games","header2");
-	      $query = mysql_query("SELECT * FROM `games` WHERE CURDATE() <= `date` AND `status` = 3 AND `homegame`= 1 AND `clubid`='".$currentUser['clubid']."' ORDER BY `date`,`time` ASC");
-	      $query2 = mysql_query("SELECT * FROM `games` WHERE `date` = '0000-00-00' AND `status` = 3 AND `homegame`= 1 AND `clubid`='".$currentUser['clubid']."' ORDER BY `date`,`time` ASC");
+	      $query = mysqli_query($GLOBALS['link'],"SELECT * FROM `games` WHERE CURDATE() <= `date` AND `status` = 3 AND `homegame`= 1 AND `clubid`='".$currentUser['clubid']."' ORDER BY `date`,`time` ASC");
+	      $query2 = mysqli_query($GLOBALS['link'],"SELECT * FROM `games` WHERE `date` = '0000-00-00' AND `status` = 3 AND `homegame`= 1 AND `clubid`='".$currentUser['clubid']."' ORDER BY `date`,`time` ASC");
 	  break;
 	  
 	  case "refereeplanseason":
 	      echo fetchText("All Games (Season)","header2");
-	      $query = mysql_query("SELECT * FROM `games` WHERE `homegame`= 1 AND `clubid`='".$currentUser['clubid']."' ORDER BY `date`,`time` ASC");
-	      $query2 = mysql_query("SELECT * FROM `games` WHERE `date` = '0000-00-00' AND `homegame`= 1 AND `clubid`='".$currentUser['clubid']."' ORDER BY `date`,`time` ASC");
+	      $query = mysqli_query($GLOBALS['link'],"SELECT * FROM `games` WHERE `homegame`= 1 AND `clubid`='".$currentUser['clubid']."' ORDER BY `date`,`time` ASC");
+	      $query2 = mysqli_query($GLOBALS['link'],"SELECT * FROM `games` WHERE `date` = '0000-00-00' AND `homegame`= 1 AND `clubid`='".$currentUser['clubid']."' ORDER BY `date`,`time` ASC");
 	  break;
 
     }
@@ -72,14 +73,14 @@ case "refereeplanseason":
     
     echo showGamesLegend();
     
-    if(mysql_num_rows($query2)){
-	while($row = mysql_fetch_assoc($query2)){
+    if(mysqli_num_rows($GLOBALS['link'],$query2)){
+	while($row = mysqli_fetch_assoc($GLOBALS['link'],$query2)){
 	    $games[] = new gameObj($row);
 	}
     }
 
-    if(mysql_num_rows($query)){
-	while($row = mysql_fetch_assoc($query)){
+    if(mysqli_num_rows($GLOBALS['link'],$query)){
+	while($row = mysqli_fetch_assoc($GLOBALS['link'],$query)){
 	    $games[] = new gameObj($row);
 	}
     }

@@ -2,7 +2,7 @@
 require_once("refereeplan.ajax.common.php");
 getIncludes();
 
-$currentUser = mysql_fetch_assoc(getCurrentUser());
+$currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
 
 switch($_POST['action']){
 
@@ -10,7 +10,7 @@ switch($_POST['action']){
         
         $query = ref_mysql_query("SELECT * FROM `teams` WHERE `name`='".$_POST['name']."' AND `clubid`='".$currentUser['clubid']."'");
         
-        $exists = mysql_num_rows($query);
+        $exists = mysqli_num_rows($GLOBALS['link'],$query);
 
         $json = '[ { "exists": "'.$exists.'" } ]';
         
@@ -22,7 +22,7 @@ switch($_POST['action']){
   
 	ref_mysql_query("INSERT INTO `teams` (`name`,`contactid`,`clubid`) VALUES ('".$_POST['name']."','".$_POST['contactid']."','".$currentUser['clubid']."')");
 	
-	$json = '[ { "id": "'.mysql_insert_id().'" } ]';
+	$json = '[ { "id": "'.mysqli_insert_id($GLOBALS['link']).'" } ]';
 	
 	echo $json;
   
@@ -44,7 +44,7 @@ switch($_POST['action']){
   
 	$query = ref_mysql_query("SELECT * FROM `teams` WHERE `id`='".$_POST['id']."'");
 	
-	$team = mysql_fetch_assoc($query);
+	$team = mysqli_fetch_assoc($GLOBALS['link'],$query);
 	
 	$json = '[ { "name": "'.$team['name'].'", "contactid": "'.$team['contactid'].'" } ]';
 	

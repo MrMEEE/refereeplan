@@ -12,7 +12,7 @@ class gameObj{
 
       public function __toString(){
 	    
-	    $currentUser = mysql_fetch_assoc(getCurrentUser());
+	    $currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
 	    
 	    $teamlists["refereeteam1"] = " ";
 	    $teamlists["refereeteam2"] = " ";
@@ -21,7 +21,7 @@ class gameObj{
 	    $teamlists["tableteam3"] = " ";
 	    $result = ref_mysql_query("SELECT id, name FROM teams WHERE (`clubid`='".$currentUser['clubid']."' OR `clubid`='-1') ORDER BY name ASC");
 	    
-	    while(list($id, $name)=mysql_fetch_row($result)) {
+	    while(list($id, $name)=mysqli_fetch_row($GLOBALS['link'],$result)) {
 		  foreach ($teamlists as $key => $value){
 			if(!(preg_match('/table/',$key) && $name=="DBBF"))
 			if($this->data[$key.'id']==$id){
@@ -236,7 +236,7 @@ class gameObj{
 	
 	public static function changeTeam($id, $team, $teamlist){
 	
-		$currentUser = mysql_fetch_assoc(getCurrentUser());
+		$currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
 		
 		switch($teamlist){
 			case '1':
@@ -257,7 +257,7 @@ class gameObj{
 		}
 		$team = self::esc($team);
 		if(!$team) throw new Exception("Wrong update text!");
-		$game=mysql_fetch_assoc(ref_mysql_query("SELECT * FROM games WHERE gameid = '$id' AND `clubid`='".$currentUser['clubid']."'"));
+		$game=mysqli_fetch_assoc($GLOBALS['link'],ref_mysql_query("SELECT * FROM games WHERE gameid = '$id' AND `clubid`='".$currentUser['clubid']."'"));
 		$status=$game['status'];
 		ref_mysql_query("UPDATE games SET $idlist='".$team."' WHERE gameid=".$id." AND `clubid`='".$currentUser['clubid']."'");
 		if($status=='2'){
@@ -265,18 +265,18 @@ class gameObj{
 		    $status='1';
 		}
 		
-		$game=mysql_fetch_assoc(ref_mysql_query("SELECT * FROM games WHERE gameid = '$id' AND `clubid`='".$currentUser['clubid']."'"));
+		$game=mysqli_fetch_assoc($GLOBALS['link'],ref_mysql_query("SELECT * FROM games WHERE gameid = '$id' AND `clubid`='".$currentUser['clubid']."'"));
 		if($status=='1' && $game['refereeteam1id']!='0' && $game['refereeteam2id']!='0' && $game['tableteam1id']!='0' && $game['tableteam2id']!='0' && $game['tableteam3id']!='0'){
 		    ref_mysql_query("UPDATE games SET status='0' WHERE gameid = '".$game['gameid']."' AND `clubid`='".$currentUser['clubid']."'");
 		}
 	
-		if(mysql_affected_rows($GLOBALS['link'])!=1)
+		if(mysqli_affected_rows($GLOBALS['link'])!=1)
 			throw new Exception("Couldn't update item!");
 	}
 		
 	public static function edit($id, $text, $type){
 	
-		$currentUser = mysql_fetch_assoc(getCurrentUser());
+		$currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
 		
 		echo '<script language="javascript">confirm("'.$text.'")</script>;';
 		$text = self::esc($text);
@@ -284,46 +284,46 @@ class gameObj{
 		
 		ref_mysql_query("UPDATE games SET $type='".$text."' WHERE gameid=".$id." AND `clubid`='".$currentUser['clubid']."'");
 		
-		if(mysql_affected_rows($GLOBALS['link'])!=1)
+		if(mysqli_affected_rows($GLOBALS['link'])!=1)
 			throw new Exception("Couldn't update item!");
 	}
 
 	
 	public static function delete($id){
 	
-		$currentUser = mysql_fetch_assoc(getCurrentUser());
+		$currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
 		
 		ref_mysql_query("DELETE FROM games WHERE gameid=".$id." AND `clubid`='".$currentUser['clubid']."'");
 		
-		if(mysql_affected_rows($GLOBALS['link'])!=1)
+		if(mysqli_affected_rows($GLOBALS['link'])!=1)
 			throw new Exception("Couldn't delete item!");
 	}
 	
 		
 	public static function createNew($text){
 	
-		$currentUser = mysql_fetch_assoc(getCurrentUser());
+		$currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
 		
 		$text = self::esc($text);
 		if(!$text) throw new Exception("Wrong input data!");
 		
 		$posResult = ref_mysql_query("SELECT MAX(position)+1 FROM games WHERE `clubid`='".$currentUser['clubid']."'");
 		
-		if(mysql_num_rows($posResult))
-			list($position) = mysql_fetch_array($posResult);
+		if(mysqli_num_rows($GLOBALS['link'],$posResult))
+			list($position) = mysqli_fetch_array($GLOBALS['link'],$posResult);
 
 		//if(!$position) 
 		$position = 1;
 
 		ref_mysql_query("INSERT INTO games SET text='".$text."',time='00:00:00',position = ".$position.",`clubid`='".$currentUser['clubid']."'");
 
-		if(mysql_affected_rows($GLOBALS['link'])!=1)
+		if(mysqli_affected_rows($GLOBALS['link'])!=1)
 			throw new Exception("Error inserting Game!");
 		
 		// Creating a new Game and outputting it directly:
 		
 		echo (new gameObj(array(
-			'id'	=> mysql_insert_id($GLOBALS['link']),
+			'id'	=> mysqli_insert_id($GLOBALS['link']),
 			'text'	=> $text
 		)));
 		
@@ -337,7 +337,7 @@ class gameObj{
 		if(ini_get('magic_quotes_gpc'))
 			$str = stripslashes($str);
 		
-		return mysql_real_escape_string(strip_tags($str));
+		return mysqli_real_escape_string($GLOBALS['link'],strip_tags($str));
 	}
 
 }
