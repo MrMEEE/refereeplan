@@ -31,7 +31,7 @@ case "refereeplanseason":
     require("class/refereeplan.class.games.php");
     require("refereeplan.common.games.functions.php");
     
-    $currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
+    $currentUser = mysqli_fetch_assoc(getCurrentUser());
     
     echo showGamesCommon();
     
@@ -73,14 +73,14 @@ case "refereeplanseason":
     
     echo showGamesLegend();
     
-    if(mysqli_num_rows($GLOBALS['link'],$query2)){
-	while($row = mysqli_fetch_assoc($GLOBALS['link'],$query2)){
+    if(mysqli_num_rows($query2)){
+	while($row = mysqli_fetch_assoc($query2)){
 	    $games[] = new gameObj($row);
 	}
     }
 
-    if(mysqli_num_rows($GLOBALS['link'],$query)){
-	while($row = mysqli_fetch_assoc($GLOBALS['link'],$query)){
+    if(mysqli_num_rows($query)){
+	while($row = mysqli_fetch_assoc($query)){
 	    $games[] = new gameObj($row);
 	}
     }

@@ -49,8 +49,8 @@ function addAllTeams($currentClub){
     list ($clubs,$ids) = getClubs();
     
     $addedteams=0;
-    for($i = 0, $size = count($ids); $i < $size; ++$i){
-      echo $clubs[i];
+    for($i = 0, $size = count($ids); $i < $size; $i++){
+      #echo $clubs[$i];
       $url = "http://resultater.basket.dk/tms/Turneringer-og-resultater/Forening-Holdoversigt.aspx?ForeningsId=".$ids[$i];
       $input .= @file_get_contents($url) or die("Could not access url: $url");
     }
@@ -76,14 +76,43 @@ function addAllTeams($currentClub){
 
 function setBasketDKValidation(){
 
-    $info = explode("<br>",file_get_contents("http://www.dommerplan.dk/info.php"));
+    $url = "http://resultater.basket.dk/tms/Turneringer-og-resultater/Soegning.aspx";
+    
+    $useragent = "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0";
+
+    $ch = curl_init();
+
+    // set user agent
+    curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    // grab content from the website
+    $content = curl_exec($ch);
+    curl_close($ch);
+
+    $doc = new DOMDocument();
+    $doc->loadHTML($content);
+
+    foreach( $doc->getElementsByTagName('input') as $item){
+       $params[$item->getAttribute('name')] =  $item->getAttribute('value');
+    }
+
+    #var_dump($params);
 
     $validation = array('url' => "http://resultater.basket.dk/tms/Turneringer-og-resultater/Soegning.aspx",
-		    'viewstate' => $info[0],
+		    'viewstate' => urlencode($params['__VIEWSTATE']),
 		    'eventtarget' => "",
 		    'eventargument' => "",
-		    'eventvalidation' => $info[1]
+		    'eventvalidation' => urlencode($params['__EVENTVALIDATION']),
+		    'viewstategenerator' => $params['__VIEWSTATEGENERATOR'],
+                    'user-agent' => "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0"
 		    );
+
+    #var_dump($validation);
 
     return $validation;
 
@@ -102,38 +131,30 @@ function getClubs(){
     $url = $validation['url'];
 
     $fields = array(
-            '__VIEWSTATE'=>$validation['viewstate'],
-            '__EVENTTARGET'=>$validation['eventtarget'],
-            '__EVENTARGUMENT'=>$validation['eventargument'],
-            '__EVENTVALIDATION'=>$validation['eventvalidation'],
-            'ctl00%24ContentPlaceHolder1%24Soegning%24Search'=>'rdClub',
-            'ctl00%24ContentPlaceHolder1%24Soegning%24txtSelectedCenterSearchModule'=>'2',
-            'ctl00%24ContentPlaceHolder1%24Soegning%24ddlGender'=>'1',
-            'ctl00%24ContentPlaceHolder1%24Soegning%24ddlDivision'=>'2',
-            'ctl00%24ContentPlaceHolder1%24Soegning%24ddlSeason'=>'0',
-            'ctl00%24ContentPlaceHolder1%24Soegning%24txtClubName'=>'',
-            'ctl00%24ContentPlaceHolder1%24Soegning%24btnSearchClub'=>'S%C3%B8g',
-            'ctl00%24ContentPlaceHolder1%24Soegning%24txtStadiumName'=>'',
-            'ctl00%24ContentPlaceHolder1%24Soegning%24CommitteeName'=>'',
-            'ctl00%24ContentPlaceHolder1%24Soegning%24txtMatchNumber'=>'',
-            'ctl00%24ContentPlaceHolder1%24Soegning%24txtRefereeName'=>'',
-            'ctl00%24ContentPlaceHolder1%24Soegning%24ddlTournaments_Tournament'=>'0'
+      '__VIEWSTATE'=>$validation['viewstate'],
+      '__VIEWSTATEGENERATOR'=>$validation['viewstategenerator'],
+      '__EVENTVALIDATION'=>$validation['eventvalidation'],
+      'ctl00%24ContentPlaceHolder1%24Soegning%24Search'=>'rdClub',
+      'ctl00%24ContentPlaceHolder1%24Soegning%24btnSearchClub'=>'Søg'
+    );
 
-     );
 
     foreach($fields as $key=>$value){ 
         $fields_string .= $key.'='.$value.'&'; 
     }
 
     rtrim($fields_string,'&');
+    
+    $useragent = "Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20100101 Firefox/10.0";
 
     $ch = curl_init();
-
+    
+    curl_setopt($ch,CURLOPT_USERAGENT,$useragent);
     curl_setopt($ch,CURLOPT_URL,$url);
-    curl_setopt($ch,CURLOPT_POST,count($fields));
+    curl_setopt($ch,CURLOPT_POST,true);
     curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);
     curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-    curl_setopt($ch,CURLOPT_HTTPHEADER,Array("Content-Type: application/x-www-form-urlencoded")); 
+    curl_setopt($ch,CURLOPT_HTTPHEADER,Array("Content-Type: application/x-www-form-urlencoded; charset=utf-8")); 
     curl_setopt($ch,CURLOPT_TIMEOUT,5);
 
 
@@ -455,7 +476,7 @@ function syncTeam($teamid,$teamurl){
 	$clubids = getClubIDs();
 	$courts = array();
 	$returns = array();
-	$currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
+	$currentUser = mysqli_fetch_assoc(getCurrentUser());
 	
 	for($i = 0, $size = count($clubids); $i < $size; ++$i){
 	    $courts = array_merge(getCourts($clubids[$i]),$courts);
@@ -469,7 +490,7 @@ function syncTeam($teamid,$teamurl){
 	    ref_mysql_query("INSERT INTO teams SET name='-',`clubid`='-1'");
 	}
 	
-	$dbbfentry=mysqli_fetch_assoc($GLOBALS['link'],ref_mysql_query("SELECT * FROM teams WHERE name = 'DBBF' AND `clubid`='-1'"));
+	$dbbfentry=mysqli_fetch_assoc(ref_mysql_query("SELECT * FROM teams WHERE name = 'DBBF' AND `clubid`='-1'"));
 	$dbbfid=$dbbfentry['id'];
 	
 	$dom = new DOMDocument();  
@@ -602,7 +623,7 @@ function syncTeam($teamid,$teamurl){
 
 			if(mysql_num_rows(ref_mysql_query("SELECT `gameid` FROM `games` WHERE `gameid` = '$id' AND `clubid`='".$currentUser['clubid']."'"))) {
 				ref_mysql_query("UPDATE `games` set place='$place' WHERE gameid='$id'");
-				$query=mysqli_fetch_assoc($GLOBALS['link'],ref_mysql_query("SELECT * FROM games WHERE `gameid` = '$id' AND `clubid`='".$currentUser['clubid']."'"));
+				$query=mysqli_fetch_assoc(ref_mysql_query("SELECT * FROM games WHERE `gameid` = '$id' AND `clubid`='".$currentUser['clubid']."'"));
 				$oldtext=$query['text'];
 				$olddate=$query['date'];
 				$oldtime=$query['time'];

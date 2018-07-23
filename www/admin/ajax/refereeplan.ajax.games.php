@@ -24,11 +24,11 @@ switch($_POST['syncAction']){
   break;
   case "getTeams":
       
-      $currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
+      $currentUser = mysqli_fetch_assoc(getCurrentUser());
       
       $calendars = ref_mysql_query("SELECT * FROM `calendars` WHERE `clubid`='".$currentUser['clubid']."'");
       
-      if(mysqli_num_rows($GLOBALS['link'],$calendars) < 1){
+      if(mysqli_num_rows($calendars) < 1){
 
 	    $json = '[ { "id": "", "name": "'.fetchText("No Teams").'", "address": "" } ]';
       
@@ -36,7 +36,7 @@ switch($_POST['syncAction']){
 	    
 	    $json = '[ ';
 
-	    while($cal=mysqli_fetch_assoc($GLOBALS['link'],$calendars)){
+	    while($cal=mysqli_fetch_assoc($calendars)){
 	    
 		  $json .= '{ "id": "'.$cal["id"].'", "name": "'.$cal["team"].'", "address": "'.$cal["address"].'" }, ';
 	    
@@ -52,7 +52,7 @@ switch($_POST['syncAction']){
 }
 
 $id = (int)$_POST['id'];
-$currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
+$currentUser = mysqli_fetch_assoc(getCurrentUser());
 
 switch($_POST['action']){
 	case 'delete':
@@ -98,7 +98,7 @@ switch($_POST['action']){
 	
 	case 'getclass':
 		
-		$game = mysqli_fetch_assoc($GLOBALS['link'],ref_mysql_query("SELECT * FROM `games` WHERE `gameid`='".$_POST['id']."' AND `clubid`='".$currentUser['clubid']."'"));
+		$game = mysqli_fetch_assoc(ref_mysql_query("SELECT * FROM `games` WHERE `gameid`='".$_POST['id']."' AND `clubid`='".$currentUser['clubid']."'"));
 		
 		switch($game['status']){
 		
@@ -126,7 +126,7 @@ switch($_POST['action']){
 	break;
 	
 	case 'acknowledgemove':
-		$game = mysqli_fetch_assoc($GLOBALS['link'],ref_mysql_query("SELECT * FROM `games` WHERE `gameid`='".$_POST['id']."' AND `clubid`='".$currentUser['clubid']."'"));
+		$game = mysqli_fetch_assoc(ref_mysql_query("SELECT * FROM `games` WHERE `gameid`='".$_POST['id']."' AND `clubid`='".$currentUser['clubid']."'"));
 		
 		if($game['status'] == 2){
 		    ref_mysql_query("UPDATE games SET status='1' WHERE gameid=".$game['gameid']." AND `clubid`='".$currentUser['clubid']."'");

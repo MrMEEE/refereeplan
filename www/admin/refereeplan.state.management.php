@@ -26,6 +26,9 @@ case "managementclubs":
 	      $club['id'] = $ids[$k];
 	      $club['name'] = $clubs[$k];
 	      $clublist[] = new clubObj($club);
+              if(mysqli_num_rows(ref_mysql_query("SELECT * FROM `config` WHERE `id`='".$club['id']."'")) == 0){
+              	ref_mysql_query("INSERT INTO `config` (`id`,`clubname`,`clubids`,`language`) VALUES ('".$club['id']."','".$club['name']."','".$club['id']."','dk')");
+              }
 	}
   }
   

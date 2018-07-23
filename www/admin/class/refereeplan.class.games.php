@@ -12,7 +12,7 @@ class gameObj{
 
       public function __toString(){
 	    
-	    $currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
+	    $currentUser = mysqli_fetch_assoc(getCurrentUser());
 	    
 	    $teamlists["refereeteam1"] = " ";
 	    $teamlists["refereeteam2"] = " ";
@@ -236,7 +236,7 @@ class gameObj{
 	
 	public static function changeTeam($id, $team, $teamlist){
 	
-		$currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
+		$currentUser = mysqli_fetch_assoc(getCurrentUser());
 		
 		switch($teamlist){
 			case '1':
@@ -257,7 +257,7 @@ class gameObj{
 		}
 		$team = self::esc($team);
 		if(!$team) throw new Exception("Wrong update text!");
-		$game=mysqli_fetch_assoc($GLOBALS['link'],ref_mysql_query("SELECT * FROM games WHERE gameid = '$id' AND `clubid`='".$currentUser['clubid']."'"));
+		$game=mysqli_fetch_assoc(ref_mysql_query("SELECT * FROM games WHERE gameid = '$id' AND `clubid`='".$currentUser['clubid']."'"));
 		$status=$game['status'];
 		ref_mysql_query("UPDATE games SET $idlist='".$team."' WHERE gameid=".$id." AND `clubid`='".$currentUser['clubid']."'");
 		if($status=='2'){
@@ -265,7 +265,7 @@ class gameObj{
 		    $status='1';
 		}
 		
-		$game=mysqli_fetch_assoc($GLOBALS['link'],ref_mysql_query("SELECT * FROM games WHERE gameid = '$id' AND `clubid`='".$currentUser['clubid']."'"));
+		$game=mysqli_fetch_assoc(ref_mysql_query("SELECT * FROM games WHERE gameid = '$id' AND `clubid`='".$currentUser['clubid']."'"));
 		if($status=='1' && $game['refereeteam1id']!='0' && $game['refereeteam2id']!='0' && $game['tableteam1id']!='0' && $game['tableteam2id']!='0' && $game['tableteam3id']!='0'){
 		    ref_mysql_query("UPDATE games SET status='0' WHERE gameid = '".$game['gameid']."' AND `clubid`='".$currentUser['clubid']."'");
 		}
@@ -276,7 +276,7 @@ class gameObj{
 		
 	public static function edit($id, $text, $type){
 	
-		$currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
+		$currentUser = mysqli_fetch_assoc(getCurrentUser());
 		
 		echo '<script language="javascript">confirm("'.$text.'")</script>;';
 		$text = self::esc($text);
@@ -291,7 +291,7 @@ class gameObj{
 	
 	public static function delete($id){
 	
-		$currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
+		$currentUser = mysqli_fetch_assoc(getCurrentUser());
 		
 		ref_mysql_query("DELETE FROM games WHERE gameid=".$id." AND `clubid`='".$currentUser['clubid']."'");
 		
@@ -302,15 +302,15 @@ class gameObj{
 		
 	public static function createNew($text){
 	
-		$currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
+		$currentUser = mysqli_fetch_assoc(getCurrentUser());
 		
 		$text = self::esc($text);
 		if(!$text) throw new Exception("Wrong input data!");
 		
 		$posResult = ref_mysql_query("SELECT MAX(position)+1 FROM games WHERE `clubid`='".$currentUser['clubid']."'");
 		
-		if(mysqli_num_rows($GLOBALS['link'],$posResult))
-			list($position) = mysqli_fetch_array($GLOBALS['link'],$posResult);
+		if(mysqli_num_rows($posResult))
+			list($position) = mysqli_fetch_array($posResult);
 
 		//if(!$position) 
 		$position = 1;

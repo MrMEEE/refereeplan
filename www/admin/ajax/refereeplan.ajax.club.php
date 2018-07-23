@@ -2,7 +2,7 @@
 require_once("refereeplan.ajax.common.php");
 getIncludes();
 
-$currentUser = mysqli_fetch_assoc($GLOBALS['link'],getCurrentUser());
+$currentUser = mysqli_fetch_assoc(getCurrentUser());
 
 switch($_POST['action']){
 
@@ -10,7 +10,7 @@ switch($_POST['action']){
         
         $query = ref_mysql_query("SELECT * FROM `teams` WHERE `name`='".$_POST['name']."' AND `clubid`='".$currentUser['clubid']."'");
         
-        $exists = mysqli_num_rows($GLOBALS['link'],$query);
+        $exists = mysqli_num_rows($query);
 
         $json = '[ { "exists": "'.$exists.'" } ]';
         
@@ -44,7 +44,7 @@ switch($_POST['action']){
   
 	$query = ref_mysql_query("SELECT * FROM `teams` WHERE `id`='".$_POST['id']."'");
 	
-	$team = mysqli_fetch_assoc($GLOBALS['link'],$query);
+	$team = mysqli_fetch_assoc($query);
 	
 	$json = '[ { "name": "'.$team['name'].'", "contactid": "'.$team['contactid'].'" } ]';
 	
