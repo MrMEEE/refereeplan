@@ -1,2 +1,2 @@
 #!/bin/bash
-mysqldump -uroot -p dommerplan2 > `date +%d-%m-%Y`.sql
+mysqldump -uroot -p refereeplanng > `date +%d-%m-%Y`.sql
