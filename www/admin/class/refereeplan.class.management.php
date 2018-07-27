@@ -14,9 +14,11 @@ class clubObj{
 	    
 	    $return = '<li id="club-'.$this->data['id'].'" class="clubListElement">';
 	    
-	    //$return .= '<img class="deleteTeam" width="15px" src="img/remove.png">';
-	    //$return .= '<img class="editTeam" width="15px" src="img/edit.png">';
-	    
+            if(mysqli_num_rows(ref_mysql_query("SELECT * FROM `config` WHERE `enabled`='1' AND `id`='".$this->data['id']."'")) != 0){  
+               $return .= '<img class="activateClub" width="15px" src="img/add.png">';
+            }else{
+               $return .= '<img class="activateClub" width="15px" src="img/remove.png">';
+	    }
 	    $return .= ' <span id="clubName-'.$this->data['id'].'">'.$this->data['name']."</span>";
 	    
 	    $return .= '</li>';

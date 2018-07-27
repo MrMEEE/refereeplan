@@ -1,10 +1,10 @@
 External Teams¤Eksterne hold
 Are you sure that you want to remove this team/league??¤Er du sikker p&aring; at du vil slette dette Hold/denne Pulje??
 Are you sure that you want to remove all teams/leagues??¤Er du sikker p&aring; at du vil slette alle Hold/Puljer??
-Add all of the Clubs Teams and Leagues¤Tilf&oslash;j alle klubbens hold/puljer
-Remove all of the Clubs Teams and Leagues¤Fjern alle klubbens hold/puljer
-All of the Teams and Leagues has been removed.¤Alle klubbens hold/puljer er blevet slettet.
-Remove all of the Clubs Teams and Leagues¤Fjern alle klubbens hold/puljer
+Add all of the Clubs Teams and Leagues¤Tilf&oslash;j alle klubbernes hold/puljer
+Remove all of the Clubs Teams and Leagues¤Fjern alle klubbernes hold/puljer
+All of the Teams and Leagues has been removed.¤Alle klubbernes hold/puljer er blevet slettet.
+Remove all of the Clubs Teams and Leagues¤Fjern alle klubbernes hold/puljer
 No new Teams or Leagues.¤Ingen nye Hold/Puljer.
 Added: ¤Tilf&oslash;jet: 
 Teams:¤Hold:
@@ -99,3 +99,4 @@ Remove Team??¤Slet hold??
 Are you sure you want to delete this team??¤Er du sikker på at du vil slette dette hold??
 Remove Team¤Slet hold
 Edit Team¤Rediger hold
+Teams¤Hold

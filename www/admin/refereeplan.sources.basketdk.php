@@ -13,47 +13,17 @@ function getClubIDs(){
   return explode(',',$config['clubids']);
 }
 
-/*function addAllTeams($currentClub){
-    
-    $config=getConfiguration();
-
-    $clubids=getClubIDs();
-    
-    $addedteams=0;
-    for($i = 0, $size = count($clubids); $i < $size; ++$i){
-      $url = "http://resultater.basket.dk/tms/Turneringer-og-resultater/Forening-Holdoversigt.aspx?ForeningsId=".$clubids[$i];
-      $input .= @file_get_contents($url) or die("Could not access url: $url");
-    }
-    
-    $regexp = "PuljeId=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/a>";
-    $regexp2 = "RaekkeId=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/a>";
-    
-    preg_match_all("/$regexp/siU", $input, $matches);
-    preg_match_all("/$regexp2/siU", $input, $matches2);
-  
-    $i=0;
-    foreach ($matches[2] as $urls){
-      $name=$matches2[3][$i];
-      if(!mysql_num_rows(ref_mysql_query("SELECT * FROM `calendars` WHERE `address` = 'http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls' AND `clubid`='".$currentClub."'"))){
-        ref_mysql_query("INSERT into calendars (`address`, `team`,`clubid`) VALUES ('http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls', '".fixCharacters($name)."','".$currentClub."')");
-        $addedteams++;
-      }
-      $i=$i+1;
-    }
-
-    return $addedteams;
-}*/
-
 function addAllTeams($currentClub){
     
     list ($clubs,$ids) = getClubs();
     
     $addedteams=0;
     for($i = 0, $size = count($ids); $i < $size; $i++){
-      #echo $clubs[$i];
+#      echo $clubs[$i];
+ #     echo $ids[$i];
       $url = "http://resultater.basket.dk/tms/Turneringer-og-resultater/Forening-Holdoversigt.aspx?ForeningsId=".$ids[$i];
-      $input .= @file_get_contents($url) or die("Could not access url: $url");
-    }
+      $input = @file_get_contents($url) or die("Could not access url: $url");
+    
     
     $regexp = "PuljeId=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/a>";
     $regexp2 = "RaekkeId=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/a>";
@@ -61,14 +31,15 @@ function addAllTeams($currentClub){
     preg_match_all("/$regexp/siU", $input, $matches);
     preg_match_all("/$regexp2/siU", $input, $matches2);
   
-    $i=0;
+    $j=0;
     foreach ($matches[2] as $urls){
-      $name=$matches2[3][$i];
-      if(!mysql_num_rows(ref_mysql_query("SELECT * FROM `calendars` WHERE `address` = 'http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls' AND `clubid`='".$currentClub."'"))){
-        ref_mysql_query("INSERT into calendars (`address`, `team`,`clubid`) VALUES ('http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls', '".fixCharacters($name)."','".$currentClub."')");
+      $name=$matches2[3][$j];
+      if(!mysqli_num_rows(ref_mysql_query("SELECT * FROM `calendars` WHERE `address` = 'http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls' AND `clubid`='".$ids[$i]."'"))){
+        ref_mysql_query("INSERT into calendars (`address`, `team`,`clubid`) VALUES ('http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls', '".fixCharacters($name)."','".$ids[$i]."')");
         $addedteams++;
       }
-      $i=$i+1;
+      $j=$j+1;
+    }
     }
 
     return $addedteams;
@@ -482,11 +453,11 @@ function syncTeam($teamid,$teamurl){
 	    $courts = array_merge(getCourts($clubids[$i]),$courts);
 	}
 	
-	if(!mysql_num_rows(ref_mysql_query("SELECT * FROM teams WHERE name = 'DBBF' AND `clubid`='-1'"))){
+	if(!mysqli_num_rows(ref_mysql_query("SELECT * FROM teams WHERE name = 'DBBF' AND `clubid`='-1'"))){
 	    ref_mysql_query("INSERT INTO teams SET name='DBBF',`clubid`='-1'");
 	}
 	
-	if(!mysql_num_rows(ref_mysql_query("SELECT * FROM teams WHERE name = '-' AND `clubid`='-1'"))){
+	if(!mysqli_num_rows(ref_mysql_query("SELECT * FROM teams WHERE name = '-' AND `clubid`='-1'"))){
 	    ref_mysql_query("INSERT INTO teams SET name='-',`clubid`='-1'");
 	}
 	
@@ -621,7 +592,7 @@ function syncTeam($teamid,$teamurl){
 			$text .= " vs. ";
 			$text .= trim($awayteam);
 
-			if(mysql_num_rows(ref_mysql_query("SELECT `gameid` FROM `games` WHERE `gameid` = '$id' AND `clubid`='".$currentUser['clubid']."'"))) {
+			if(mysqli_num_rows(ref_mysql_query("SELECT `gameid` FROM `games` WHERE `gameid` = '$id' AND `clubid`='".$currentUser['clubid']."'"))) {
 				ref_mysql_query("UPDATE `games` set place='$place' WHERE gameid='$id'");
 				$query=mysqli_fetch_assoc(ref_mysql_query("SELECT * FROM games WHERE `gameid` = '$id' AND `clubid`='".$currentUser['clubid']."'"));
 				$oldtext=$query['text'];

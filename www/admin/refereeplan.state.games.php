@@ -1,27 +1,5 @@
 <?php 
 
-case "refereeplanupdate":
-    
-    echo '<script type="text/javascript" src="js/games.js"></script>';
-    echo '<link rel="stylesheet" type="text/css" href="css/games.css">';
-    
-    $config = getConfiguration();
-    echo fetchText("Update Games","header2");
-        
-    ref_mysql_query("UPDATE `config` SET `value`=now() WHERE `name`='lastupdated'");
-    
-    echo '<input type="submit" name="syncNow" id="syncNow" value="'.fetchText("Syncronize").'" onclick="javascript:doSync(); this.disabled=true; return false;"><br><br>
-	  <input type="hidden" name="syncAction">
-	  <input type="hidden" name="syncTeamId">
-	  <input type="hidden" name="syncTeamUrl">';
-    
-    echo '<div id="status"></div><br>';
-    echo '<div id="progressbar"></div><br>';
-    echo '<div id="log"></div><br>';
-    
-    
-break;
-
 case "refereeplanupcomminggames":
 case "refereeplanunassigned":
 case "refereeplanrescheduled":

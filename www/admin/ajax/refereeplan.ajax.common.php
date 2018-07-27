@@ -30,7 +30,7 @@ switch($_POST['action']){
 	  }
 	  
 	  mysqli_query($GLOBALS['link'],"INSERT INTO `logons` (`username`,`passwdhash`,`time`,`status`,`clubid`) VALUES ('".$_POST['username']."','".$_POST['password']."',NOW(),'".$status."','".$_POST['club']."')");
-	  	  
+
 	  $json = '[ { "status": "'.$status.'" } ]';
 	  
 	  echo $json;

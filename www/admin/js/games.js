@@ -336,8 +336,12 @@ $(document).ready(function(){
 	});
 	
 	$("li[id^=game-]").mouseleave(function(e){
-		var gameid = $(this).attr('id').replace("game-","");
-		
+          var gameid = $(this).attr('id').replace("game-","");
+	  if ($("#dutiesinfo-"+gameid).has(e.target).length > 0) {
+   		 event.stopPropagation();
+		 return;
+	  }
+
 		$("#dutiesinfo-"+gameid).hide();
 	});
 	

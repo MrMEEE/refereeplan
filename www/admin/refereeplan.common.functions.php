@@ -64,21 +64,26 @@ function showNavigation(){
 
 function showNavigationChildren($parent){
   
-  if(mysqli_num_rows(getCurrentUser()) > 0){
-
+  $currentUser = getCurrentUser();
+  
+  if(mysqli_num_rows($currentUser) > 0){
+    $user = mysqli_fetch_assoc($currentUser);
     $mysqli_select_children = "SELECT * FROM `navigation` WHERE `parent`='".$parent."' ORDER BY `order`,`id`";
     $query = ref_mysql_query($mysqli_select_children);
     while ($child = mysqli_fetch_array($query)) {
-	if($child["disabled"]){
-	echo '<li><a href="#">'.fetchText($child["title"]).'</a>
-		<ul>';
-	}else{
-	    echo '<li><a href="#" onclick="javascript:changeState(\''.$child["name"].'\')">'.fetchText($child["title"]).'</a>
-	      <ul>';
-	}
+        if(($user['accesslevel'] >= $child['accesslevel'])){
+	  if($child["disabled"]){
+  	  echo '<li><a href="#">'.fetchText($child["title"]).'</a>
+  		  <ul>';
+	  }else{
+	      echo '<li><a href="#" onclick="javascript:changeState(\''.$child["name"].'\')">'.fetchText($child["title"]).'</a>
+	        <ul>';
+	  }
+        
 	showNavigationChildren($child["id"]);
 	echo '</ul>
 	      </li>';
+        }
     }
   
   }
@@ -92,8 +97,10 @@ function showContent($state){
   echo '<table width=90%>
           <tr>
             <td>';
-  
-  if(mysqli_num_rows(getCurrentUser()) == 0){
+ 
+  $currentUser = getCurrentUser();
+ 
+  if(mysqli_num_rows($currentUser) == 0){
 	  session_start();
 	  
           echo fetchText("Please log in.","header2");
@@ -102,7 +109,7 @@ function showContent($state){
 		'.fetchText("Club").'<br><select name="clubSelect" class="clubSelect" id="clubSelect">
 		<option value="-1">'.fetchText("Select Club").'</option>';
 	  
-	  $clubs = ref_mysql_query("SELECT * FROM `config`");
+	  $clubs = ref_mysql_query("SELECT * FROM `config` WHERE `enabled`='1'");
 	  while($club = mysqli_fetch_assoc($clubs)){
 	    
 	     echo '<option value="'.$club["id"].'">'.$club["clubname"].'</option>';
@@ -114,6 +121,11 @@ function showContent($state){
 	  echo '<div id="wrongUserPass" title="'.fetchText("False credentials").'"><div id="messageHolder">'.fetchText("Wrong Username or Password").'</div></div>';
 	  
   }else{
+        $user = mysqli_fetch_assoc($currentUser);
+         
+        $nav = mysqli_fetch_assoc(ref_mysql_query("SELECT * FROM `navigation` WHERE `name`='".$state."'"));
+        if($user['accesslevel'] >= $nav['accesslevel']){
+
 	  $showstate = "switch(".$state."){";
 	    
 	    foreach (glob("refereeplan.state.*.php") as $filename){
@@ -129,6 +141,9 @@ function showContent($state){
 	  }';
 	  
 	  eval($showstate);
+       }else{
+          echo "No Access...";
+       }
   
   }
   
@@ -316,7 +331,7 @@ function getCurrentUser($scope="SESSION"){
 
 function ref_mysql_query($query){
 
-  error_log($query);
+  //error_log($query);
 
   if((strpos($query, 'INSERT INTO') !== false) || (strpos($query, 'UPDATE') !== false) || (strpos($query, 'DELETE FROM') !== false)){
       
@@ -333,11 +348,10 @@ function ref_mysql_query($query){
       $parameters = str_replace("`","",str_replace("'","",implode(' ',array_slice($rest_array, 1))));
       
       $user = mysqli_fetch_assoc(getCurrentUser());
-      
-      
             
-      mysqli_query($GLOBALS['link'],"INSERT INTO `log` (`time`,`action`,`parameters`,`tablename`,`userid`) VALUES (NOW(),'".$action."','".$parameters."','".$table."','".$user['id']."')");
-  
+      $query = "INSERT INTO `log` (`time`,`action`,`parameters`,`table`,`userid`) VALUES (NOW(),'".$action."','".$parameters."','".$table."','".$user['id']."')";
+      error_log($query);
+      mysqli_query($GLOBALS['link'],$query);
   }
   
   return mysqli_query($GLOBALS['link'],$query);

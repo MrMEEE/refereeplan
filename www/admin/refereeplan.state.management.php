@@ -1,7 +1,98 @@
 <?php 
 
-case "managementclubs":
 
+case "refereeplanupdate":
+
+    echo '<script type="text/javascript" src="js/games.js"></script>';
+    echo '<link rel="stylesheet" type="text/css" href="css/games.css">';
+
+    $config = getConfiguration();
+    echo fetchText("Update Games","header2");
+
+    ref_mysql_query("UPDATE `config` SET `value`=now() WHERE `name`='lastupdated'");
+
+    echo '<input type="submit" name="syncNow" id="syncNow" value="'.fetchText("Syncronize").'" onclick="javascript:doSync(); this.disabled=true; return false;"><br><br>
+          <input type="hidden" name="syncAction">
+          <input type="hidden" name="syncTeamId">
+          <input type="hidden" name="syncTeamUrl">';
+
+    echo '<div id="status"></div><br>';
+    echo '<div id="progressbar"></div><br>';
+    echo '<div id="log"></div><br>';
+
+
+break;
+
+case "managementteams":
+ 
+  $currentUser = mysqli_fetch_assoc(getCurrentUser());  
+
+  echo '<script type="text/javascript" src="js/club.js"></script>';
+
+  if($_POST["removeTeam"]){
+
+    ref_mysql_query("DELETE FROM `calendars` WHERE `id`='".$_POST["removeTeam"]."' AND `clubid`='".$currentUser['clubid']."'");
+    $warning = fetchText("Team/League was removed.");
+
+  }
+
+  if($_POST["removeAllTeams"]){
+
+    ref_mysql_query("DELETE FROM `calendars` WHERE `clubid`='".$currentUser['clubid']."'");
+    $warning = fetchText("All of the Teams and Leagues has been removed.");
+
+  }
+
+  if($_POST["addAllTeams"]){
+
+    $newteams = addAllTeams($currentUser['clubid']);
+
+    if($newteams==0){
+      $info = fetchText("No new Teams or Leagues.");
+    }else{
+      $info = $newteams;
+      $info .= fetchText(" new Team(s)/League(s) was added.");
+    }
+
+  }
+
+  echo fetchText("External Teams","header2");
+  echo showMessages($info,$warning,$error);
+  echo '<br><a href="javascript:addAllTeams()">';
+  echo fetchText("Add all of the Clubs Teams and Leagues");
+  echo '</a><br>';
+  echo '<br><a href="javascript:removeAllTeams()">';
+  echo fetchText("Remove all of the Clubs Teams and Leagues");
+  echo '</a><br><br>';
+
+  $query = ref_mysql_query("SELECT * FROM `calendars` ORDER BY `clubid`,`team`");
+
+  echo fetchText("Teams:","header3");
+
+  list ($clubs,$ids) = getClubs();
+
+  while($row = mysqli_fetch_assoc($query)){
+    echo $clubs[array_search($row['clubid'],$ids)];
+    echo ' - ';
+    echo '<a href="';
+    echo $row['address'];
+    echo '">';
+    echo $row['team'];
+    echo '</a>';
+    echo ' - ';
+    echo '<a href="javascript:void(removeTeam('.$row['id'].'))">'.fetchText("Remove").'</a>';
+    echo '<br>';
+  }
+
+  echo '<input type="hidden" name="removeTeam">
+        <input type="hidden" name="removeAllTeams">
+        <input type="hidden" name="addAllTeams">';
+
+
+break;
+
+case "managementclubs":
+  
   echo '<script type="text/javascript" src="js/management.js"></script>';
   echo '<link rel="stylesheet" type="text/css" href="css/management.css">';
   

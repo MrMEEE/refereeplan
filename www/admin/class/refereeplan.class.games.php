@@ -21,7 +21,7 @@ class gameObj{
 	    $teamlists["tableteam3"] = " ";
 	    $result = ref_mysql_query("SELECT id, name FROM teams WHERE (`clubid`='".$currentUser['clubid']."' OR `clubid`='-1') ORDER BY name ASC");
 	    
-	    while(list($id, $name)=mysqli_fetch_row($GLOBALS['link'],$result)) {
+	    while(list($id, $name)=mysqli_fetch_row($result)) {
 		  foreach ($teamlists as $key => $value){
 			if(!(preg_match('/table/',$key) && $name=="DBBF"))
 			if($this->data[$key.'id']==$id){
