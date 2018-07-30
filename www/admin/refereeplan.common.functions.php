@@ -332,7 +332,7 @@ function getCurrentUser($scope="SESSION"){
 function ref_mysql_query($query){
 
   //error_log($query);
-
+  //error_log(mysqli_error($GLOBALS['link']));
   if((strpos($query, 'INSERT INTO') !== false) || (strpos($query, 'UPDATE') !== false) || (strpos($query, 'DELETE FROM') !== false)){
       
       $action = substr($query,0,6);
@@ -349,9 +349,9 @@ function ref_mysql_query($query){
       
       $user = mysqli_fetch_assoc(getCurrentUser());
             
-      $query = "INSERT INTO `log` (`time`,`action`,`parameters`,`table`,`userid`) VALUES (NOW(),'".$action."','".$parameters."','".$table."','".$user['id']."')";
-      error_log($query);
-      mysqli_query($GLOBALS['link'],$query);
+      $querystr = "INSERT INTO `log` (`time`,`action`,`parameters`,`table`,`userid`) VALUES (NOW(),'".$action."','".$parameters."','".$table."','".$user['id']."')";
+      error_log($querystr);
+      mysqli_query($GLOBALS['link'],$querystr);
   }
   
   return mysqli_query($GLOBALS['link'],$query);

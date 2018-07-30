@@ -7,7 +7,7 @@ switch($_POST['syncAction']){
   case "syncTeam":
         getIncludes();
 	
-	$returns = syncTeam($_POST['syncTeamId'],$_POST['syncTeamUrl']);
+	$returns = syncTeam($_POST['syncTeamId'],$_POST['syncTeamUrl'],$_POST['syncClubId']);
 	
 	$json = '[ ';
 	
@@ -22,6 +22,46 @@ switch($_POST['syncAction']){
 	echo $json;
 
   break;
+  case "getAllTeams":
+
+  list ($clubs,$ids) = getClubs();
+
+  //echo $clubs[array_search($row['clubid'],$ids)];
+
+  $activeteamquery = ref_mysql_query("SELECT * FROM `config` WHERE `enabled`='1'");  
+
+  while($team = mysqli_fetch_assoc($activeteamquery)){
+
+     $activeteams .= $team['id'].",";
+
+  }
+ 
+  $activeteams = substr_replace($activeteams ,"",-1); 
+
+  $calendars = ref_mysql_query("SELECT * FROM `calendars` WHERE `clubid` IN (".$activeteams.")");
+
+  if(mysqli_num_rows($calendars) < 1){
+     
+     $json = '[ { "id": "", "name": "'.fetchText("No Teams").'", "address": "", "clubid": "", "clubname": ""} ]';
+
+  }else{
+
+      $json = '[ ';
+
+      while($cal=mysqli_fetch_assoc($calendars)){
+         
+          $json .= '{ "id": "'.$cal["id"].'", "name": "'.$cal["team"].'", "address": "'.$cal["address"].'", "clubid": "'.$cal["clubid"].'", "clubname": "'.$clubs[array_search($cal["clubid"],$ids)].'" }, ';
+      
+       }
+       $json = substr_replace($json ,"",-2);
+       $json .= " ]";
+
+  }
+      
+  echo $json;
+
+  break;
+
   case "getTeams":
       
       $currentUser = mysqli_fetch_assoc(getCurrentUser());

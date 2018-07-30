@@ -14,7 +14,8 @@ case "refereeplanupdate":
     echo '<input type="submit" name="syncNow" id="syncNow" value="'.fetchText("Syncronize").'" onclick="javascript:doSync(); this.disabled=true; return false;"><br><br>
           <input type="hidden" name="syncAction">
           <input type="hidden" name="syncTeamId">
-          <input type="hidden" name="syncTeamUrl">';
+          <input type="hidden" name="syncTeamUrl">
+          <input type="hidden" name="syncClubId">';
 
     echo '<div id="status"></div><br>';
     echo '<div id="progressbar"></div><br>';

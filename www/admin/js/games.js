@@ -349,8 +349,9 @@ $(document).ready(function(){
 
 function doSync(){
 			$("#log").empty();
-			document.mainForm.syncAction.value="getTeams";
+			document.mainForm.syncAction.value="getAllTeams";
 			$.ajax({type: "POST", url: "ajax/refereeplan.ajax.games.php",async:true,dataType: "json",data: $("#mainForm").serialize() ,success: function(data){
+                                console.debug(data);
 				syncTeams(data,data.length,1);
 				
 			},error: function(xhr, status, err) {
@@ -374,10 +375,11 @@ function syncTeams(data,length,count){
 		});
 		
 		count++;
-		$("#status").append(fetchText("Syncing team: ")+syncItem.name).fadeIn( 400 );
+		$("#status").append(fetchText("Syncing team: ")+syncItem.clubname+" - "+syncItem.name).fadeIn( 400 );
 		document.mainForm.syncTeamId.value=syncItem.id;
 		document.mainForm.syncTeamUrl.value=syncItem.address;
 		document.mainForm.syncAction.value="syncTeam";
+                document.mainForm.syncClubId.value=syncItem.clubid;
 		
 		$.ajax({type: "POST", url: "ajax/refereeplan.ajax.games.php",async:true,dataType: "json",data:$("#mainForm").serialize() ,success: function(syncdata){
 			for (var j = 0, len = syncdata.length; j < len; j++) {
