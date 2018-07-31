@@ -39,7 +39,7 @@ case "managementteams":
 
   if($_POST["removeAllTeams"]){
 
-    ref_mysql_query("DELETE FROM `calendars` WHERE `clubid`='".$currentUser['clubid']."'");
+    ref_mysql_query("DELETE FROM `calendars`");
     $warning = fetchText("All of the Teams and Leagues has been removed.");
 
   }
@@ -119,7 +119,7 @@ case "managementclubs":
 	      $club['name'] = $clubs[$k];
 	      $clublist[] = new clubObj($club);
               if(mysqli_num_rows(ref_mysql_query("SELECT * FROM `config` WHERE `id`='".$club['id']."'")) == 0){
-              	ref_mysql_query("INSERT INTO `config` (`id`,`clubname`,`clubids`,`language`) VALUES ('".$club['id']."','".$club['name']."','".$club['id']."','dk')");
+              	ref_mysql_query("INSERT INTO `config` (`id`,`clubname`,`clubid`,`language`) VALUES ('".$club['id']."','".$club['name']."','".$club['id']."','dk')");
               }
 	}
   }

@@ -10,7 +10,7 @@ function getClubIDs(){
   
   $config=getConfiguration();
 
-  return explode(',',$config['clubids']);
+  return explode(',',$config['clubid']);
 }
 
 function addAllTeams($currentClub){
@@ -18,10 +18,14 @@ function addAllTeams($currentClub){
     list ($clubs,$ids) = getClubs();
     
     $addedteams=0;
-    for($i = 0, $size = count($ids); $i < $size; $i++){
-      $url = "http://resultater.basket.dk/tms/Turneringer-og-resultater/Forening-Holdoversigt.aspx?ForeningsId=".$ids[$i];
+
+    $activeClubs = ref_mysql_query("SELECT * FROM `config` WHERE `enabled`='1'");
+ 
+    while($activeClub = mysqli_fetch_assoc($activeClubs)){
+
+      $url = "http://resultater.basket.dk/tms/Turneringer-og-resultater/Forening-Holdoversigt.aspx?ForeningsId=".$activeClub['clubid'];
       $input = @file_get_contents($url) or die("Could not access url: $url");
-     
+     error_log($ids[$activeClub['clubid']]);
     
       $regexp = "PuljeId=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/a>";
       $regexp2 = "RaekkeId=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/a>";
@@ -32,8 +36,8 @@ function addAllTeams($currentClub){
     $j=0;
     foreach ($matches[2] as $urls){
       $name=$matches2[3][$j];
-      if(!mysqli_num_rows(ref_mysql_query("SELECT * FROM `calendars` WHERE `address` = 'http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls' AND `clubid`='".$ids[$i]."'"))){
-        ref_mysql_query("INSERT into calendars (`address`, `team`,`clubid`) VALUES ('http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls', '".fixCharacters($name)."','".$ids[$i]."')");
+      if(!mysqli_num_rows(ref_mysql_query("SELECT * FROM `calendars` WHERE `address` = 'http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls' AND `clubid`='".$activeClub['clubid']."'"))){
+        ref_mysql_query("INSERT into calendars (`address`, `team`,`clubid`) VALUES ('http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls', '".fixCharacters($name)."','".$activeClub['clubid']."')");
         $addedteams++;
       }
       $j=$j+1;
