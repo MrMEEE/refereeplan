@@ -39,6 +39,11 @@ function setClubInfo(id){
 
 	$.ajax({type: "POST", url: "ajax/refereeplan.ajax.management.php",async:true,dataType: "json",data: {'action':'getClubInfo','id':id},success: function(data){
 		$('#editClubNameHolder').text(data[0].name);
+                if(data[0].enabled == "1"){
+                  $('#clubActive').attr('checked', true);
+                }else{
+		  $('#clubActive').attr('checked', false); 
+		}
 	}
 	});
 }

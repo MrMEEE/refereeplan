@@ -2,11 +2,17 @@
   list-style-type: none;
 }
 
-#editDialogPlaceHolder{
-  height: 110px  !important;
+.editDialogPlaceHolder{
+  #height: 300px  !important;
 }
+
+div#editClubPlaceHolder{
+  height: 130px !important;
+}
+
 .editDialog{
   width: 15px;
+#  height: 200px !important; 
   padding-right:3px;
   padding-left:3px;
 }

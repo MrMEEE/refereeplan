@@ -97,10 +97,12 @@ case "managementclubs":
   echo '<script type="text/javascript" src="js/management.js"></script>';
   echo '<link rel="stylesheet" type="text/css" href="css/management.css">';
   
-   echo '<div id="editClubPlaceHolder" title="'.fetchText("Edit Club").'">
-	  <div id="editClubNameHolder"></div>
+   echo '<div id="editClubPlaceHolder" class="editClubPlaceHolder" title="'.fetchText("Edit Club").'">
+	  <div id="editClubNameHolder">
+          </div><br>
+          '.fetchText("Active: ").'<input type="checkbox" id="clubActive">
 	  <input type="hidden" id="editClubId">
-	  <div id="editClubMessageHolder"></div></div></div>';
+	  <div id="editClubMessageHolder" class="editClubMessageHolder"></div></div></div>';
 
   require("class/refereeplan.class.management.php");
 

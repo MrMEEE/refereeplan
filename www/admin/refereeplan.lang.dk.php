@@ -100,3 +100,5 @@ Are you sure you want to delete this team??¤Er du sikker på at du vil slette d
 Remove Team¤Slet hold
 Edit Team¤Rediger hold
 Teams¤Hold
+Edit Club¤Rediger klub
+Active: ¤Aktiv: 

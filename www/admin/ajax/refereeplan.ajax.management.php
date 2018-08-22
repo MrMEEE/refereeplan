@@ -12,7 +12,7 @@ switch($_POST['action']){
 	
 	$club = mysqli_fetch_assoc($query);
 	
-	$json = '[ { "name": "'.$club['clubname'].'", "id": "'.$club['id'].'" } ]';
+	$json = '[ { "name": "'.$club['clubname'].'", "id": "'.$club['id'].'", "enabled": "'.$club['enabled'].'" } ]';
 	
 	echo $json;
   
