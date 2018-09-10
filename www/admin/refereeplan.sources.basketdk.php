@@ -6,9 +6,9 @@ function getSourceInfo(){
 
 }
 
-function getClubIDs(){
+function getClubIDs($clubid = 'current'){
   
-  $config=getConfiguration();
+  $config=getConfiguration($clubid);
 
   return explode(',',$config['clubid']);
 }
@@ -266,10 +266,10 @@ function getAllCourts(){
 
 }
 
-function getTeamNames(){
+function getTeamNames($club = 'current'){
 
-      $config = getConfiguration();
-      $clubids = getClubIDs();
+      $config = getConfiguration($club);
+      $clubids = getClubIDs($club);
       foreach ($clubids as $clubid){
 	    $url = "http://resultater.basket.dk/tms/Turneringer-og-resultater/Forening-Holdoversigt.aspx?ForeningsId=".$clubid;
 
@@ -445,8 +445,8 @@ function getGame($gameid){
 function syncTeam($teamid,$teamurl,$currentclubid){
 
 	$config = getConfiguration();
-	$teamnames = getTeamNames();
-	$clubids = getClubIDs();
+	$teamnames = getTeamNames($currentclubid);
+	$clubids = getClubIDs($currentclubid);
 	$courts = array();
 	$returns = array();
 	$currentUser = mysqli_fetch_assoc(getCurrentUser());

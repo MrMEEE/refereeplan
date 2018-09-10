@@ -8,8 +8,9 @@ ul.gameList li{
 	border:1px solid #EEEEEE;
 	list-style:none;
 	height:120px;
+        //height:100%;
 	margin:4px;
-	padding:5px;
+	padding:10px;
 	position:relative;
 	width:93%;
 
@@ -51,8 +52,8 @@ ul.gameList li:hover{
 	-moz-box-shadow:0 0 5px #A6E5FD;
 	-webkit-box-shadow:0 0 5px #A6E5FD;
 	box-shadow:0 0 5px #A6E5FD;
-	height:290px;
-	-webkit-transition: width 1s ease, height 1s ease;
+	height:310px;
+ 	-webkit-transition: width 1s ease, height 1s ease;
 	-moz-transition: width 1s ease, height 1s ease;
 	-o-transition: width 1s ease, height 1s ease;
 	transition: width 1s ease, height 1s ease;

@@ -1,4 +1,5 @@
 <?php 
+
 case "configuration":
 
   $config = getConfiguration();

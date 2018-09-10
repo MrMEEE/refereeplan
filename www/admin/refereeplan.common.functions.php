@@ -156,12 +156,19 @@ function showContent($state){
   echo '<script>'.$javascript.'</script>';
 }
 
-function getConfiguration(){
+function getConfiguration($clubid = 'current'){
   
-  $currentUser = mysqli_fetch_assoc(getCurrentUser());
+  if($clubid == 'current'){
+  
+     $currentUser = mysqli_fetch_assoc(getCurrentUser());
 
-  $config = mysqli_fetch_array(ref_mysql_query("SELECT * FROM `config` WHERE `id`='".$currentUser['clubid']."'"));
+     $config = mysqli_fetch_array(ref_mysql_query("SELECT * FROM `config` WHERE `id`='".$currentUser['clubid']."'"));
   
+  }else{
+     
+    $config = mysqli_fetch_array(ref_mysql_query("SELECT * FROM `config` WHERE `id`='".$clubid."'"));    
+
+  }
   foreach($config as $key=>$value){
   
     $configarray[$key] = $value ;
