@@ -573,13 +573,17 @@ function syncTeam($teamid,$teamurl,$currentclubid){
 			$fulldate = str_replace("\n", "", $fulldate);
 			$fulldate = str_replace("\r", "", $fulldate);
 			$fulldate = str_replace(" ", "", $fulldate );
-
+			
+			if($fulldate != ""){
 			$date = "20";
 			$date .= substr($fulldate,6,2);
 			$date .= "-";
 			$date .= substr($fulldate,3,2);
 			$date .= "-";
 			$date .= substr($fulldate,0,2);
+			}else{
+			$date = "0000-00-00";
+			}
 			$time = substr($fulldate,13,2);
 			if($time == ""){
 			    $time = "00";
@@ -610,7 +614,24 @@ function syncTeam($teamid,$teamurl,$currentclubid){
 					if($oldtext!=$text && $olddate==$date && substr($oldtime,0,5)==$time){
 						$returns[] = fetchText("Updating Info for Game: ").$id;
 					}else{
-						$returns[] = fetchText("Changes to game: ").$id;
+						if($olddate!=$date){
+							$returns[] = fetchText("Changes to game: ").$id.fetchText(" Date changed.  ").$olddate." -> ".$date;
+						}
+						if(substr($oldtime,0,5)!=$time){
+                                                        $returns[] = fetchText("Changes to game: ").$id.fetchText(" Time changed.");
+                                                }
+						if($oldathome!=$athome){
+                                                        $returns[] = fetchText("Changes to game: ").$id.fetchText(" Homegame status changed");
+                                                }
+						if($oldteamid!=$teamid){
+                                                        $returns[] = fetchText("Changes to game: ").$id.fetchText(" Team changed.");
+                                                }
+						if($oldresult!=$result){
+                                                        $returns[] = fetchText("Changes to game: ").$id.fetchText(" Result changed.");
+                                                }
+                                                if($oldgrandprix!=$grandprix){
+                                                        $returns[] = fetchText("Changes to game: ").$id.fetchText(" Grand Prix status changed.");
+                                                }
 						$gamechanged=1;
 					}
 					if($status != 4){
