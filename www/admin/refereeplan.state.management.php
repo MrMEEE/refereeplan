@@ -46,7 +46,7 @@ case "managementteams":
 
   if($_POST["addAllTeams"]){
 
-    $newteams = addAllTeams($currentUser['clubid']);
+    $newteams = addAllTeams();
 
     if($newteams==0){
       $info = fetchText("No new Teams or Leagues.");

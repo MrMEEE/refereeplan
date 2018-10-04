@@ -13,7 +13,7 @@ function getClubIDs($clubid = 'current'){
   return explode(',',$config['clubid']);
 }
 
-function addAllTeams($currentClub){
+function addAllTeams(){
     
     list ($clubs,$ids) = getClubs();
     
@@ -25,19 +25,21 @@ function addAllTeams($currentClub){
 
       $url = "http://resultater.basket.dk/tms/Turneringer-og-resultater/Forening-Holdoversigt.aspx?ForeningsId=".$activeClub['clubid'];
       $input = @file_get_contents($url) or die("Could not access url: $url");
-     error_log($ids[$activeClub['clubid']]);
+     //error_log($ids[$activeClub['clubid']]);
     
       $regexp = "PuljeId=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/a>";
       $regexp2 = "RaekkeId=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/a>";
+      $regexp3 = "HoldId=(\"??)([^\" >]*?)\\1[^>]*>(.*)<\/a>";
     
       preg_match_all("/$regexp/siU", $input, $matches);
       preg_match_all("/$regexp2/siU", $input, $matches2);
+      preg_match_all("/$regexp3/siU", $input, $teamids);
   
     $j=0;
     foreach ($matches[2] as $urls){
       $name=$matches2[3][$j];
       if(!mysqli_num_rows(ref_mysql_query("SELECT * FROM `calendars` WHERE `address` = 'http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls' AND `clubid`='".$activeClub['clubid']."'"))){
-        ref_mysql_query("INSERT into calendars (`address`, `team`,`clubid`) VALUES ('http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls', '".fixCharacters($name)."','".$activeClub['clubid']."')");
+        ref_mysql_query("INSERT into calendars (`id`,`address`, `team`,`clubid`) VALUES ('".$teamids[2][$j]."','http://resultater.basket.dk/tms/Turneringer-og-resultater/Pulje-Komplet-Kampprogram.aspx?PuljeId=$urls', '".fixCharacters($name)."','".$activeClub['clubid']."')");
         $addedteams++;
       }
       $j=$j+1;
@@ -514,8 +516,12 @@ function syncTeam($teamid,$teamurl,$currentclubid){
 		if($status=="UDS"){
 		    $status=4;
 		}
-	      
-		if (stristr($teamname,"grandprix") || stristr($teamname,"st")){
+	        
+                $team = mysqli_fetch_assoc(ref_mysql_query("SELECT * FROM `calendars` WHERE `id`='".$teamid."'"));
+
+		$teamname = $team['team'];
+
+		if (stristr($teamname,"grandprix") || stristr($teamname,"st") || stristr($teamname,"GP")){
                         $grandprix = 1;
 		}else{
 			$grandprix = 0;
@@ -624,7 +630,7 @@ function syncTeam($teamid,$teamurl,$currentclubid){
                                                         $returns[] = fetchText("Changes to game: ").$id.fetchText(" Homegame status changed");
                                                 }
 						if($oldteamid!=$teamid){
-                                                        $returns[] = fetchText("Changes to game: ").$id.fetchText(" Team changed.");
+                                                        $returns[] = fetchText("Changes to game: ").$id.fetchText(" Team changed.")." $oldteamid -> $teamid";
                                                 }
 						if($oldresult!=$result){
                                                         $returns[] = fetchText("Changes to game: ").$id.fetchText(" Result changed.");

@@ -2,6 +2,8 @@
 require_once("refereeplan.ajax.common.php");
 require_once("../class/refereeplan.class.games.php");
 
+error_log("!!!!!!!!!!!!!!!!!!!!".print_r($_POST, true));
+
 switch($_POST['syncAction']){
 
   case "syncTeam":
@@ -94,6 +96,8 @@ switch($_POST['syncAction']){
 $id = (int)$_POST['id'];
 $currentUser = mysqli_fetch_assoc(getCurrentUser());
 
+
+if(isset($_POST['action'])){
 switch($_POST['action']){
 	case 'delete':
 		gameObj::delete($id);
@@ -187,6 +191,7 @@ switch($_POST['action']){
     
 	break;
 	
+}
 }
 
 ?>

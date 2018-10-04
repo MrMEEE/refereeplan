@@ -357,7 +357,7 @@ function ref_mysql_query($query){
       $user = mysqli_fetch_assoc(getCurrentUser());
             
       $querystr = "INSERT INTO `log` (`time`,`action`,`parameters`,`table`,`userid`) VALUES (NOW(),'".$action."','".$parameters."','".$table."','".$user['id']."')";
-      error_log($querystr);
+      //error_log($querystr);
       mysqli_query($GLOBALS['link'],$querystr);
   }
   
